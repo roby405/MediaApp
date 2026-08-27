@@ -1,48 +1,26 @@
 {
-  "name": "fuckit",
+  "name": "media-app-monorepo",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "oxlint",
-    "lint:compiler": "eslint .",
-    "preview": "vite preview"
+  "engines": {
+    "node": ">=20"
   },
-  "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
-    "@use-gesture/react": "^10.3.1",
-    "framer-motion": "^13.1.1",
-    "idb": "^8.0.3",
-    "lucide-react": "^1.31.0",
-    "music-metadata": "^11.15.0",
-    "pdfjs-dist": "^6.2.108",
-    "re-resizable": "^6.11.2",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "tailwindcss": "^4.3.3",
-    "unzipit": "^2.0.3",
-    "zustand": "^5.0.14"
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:mobile": "pnpm --filter mobile start",
+    "dev:desktop": "pnpm --filter desktop tauri dev",
+    
+    "build:web": "pnpm --filter web build",
+    "build:mobile": "pnpm --filter mobile build",
+    "build:desktop": "pnpm --filter desktop tauri build",
+    
+    "lint:all": "pnpm -r run lint",
+    "typecheck:all": "pnpm -r run typecheck",
+    
+    "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.7",
-    "@eslint/js": "^10.0.1",
-    "@rolldown/plugin-babel": "^0.2.3",
-    "@types/node": "^24.13.3",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-basic-ssl": "^2.3.0",
-    "@vitejs/plugin-react": "^6.0.4",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "eslint": "^10.8.0",
-    "eslint-plugin-react-compiler": "^19.1.0-rc.2",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.3",
-    "globals": "^17.7.0",
-    "oxlint": "^1.77.0",
-    "typescript": "~6.0.2",
-    "typescript-eslint": "^8.65.0",
-    "vite": "^8.2.0"
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0"
   }
 }

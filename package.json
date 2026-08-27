@@ -2,7 +2,7 @@
   "name": "media-app-monorepo",
   "private": true,
   "engines": {
-    "node": ">=20"
+    "node": ">=18"
   },
   "scripts": {
     "dev:web": "pnpm --filter web dev",

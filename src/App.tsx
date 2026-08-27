@@ -1,123 +1,122 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+// src/App.tsx
 
+import PageContent from "./components/PageContent";
+import MobileBottomBar from "./components/MobileBottomBar";
+import { useNavStore } from "./stores/useNavStore";
+import { SCREEN_MAP } from "./screens";
+import { useEffect, useState } from "react";
+import type { Screen } from "./types/global";
+import { AudioPlayer } from "./players/AudioPlayer";
+import { FloatingComponent } from "./components/motion/FloatingComponent";
+import { FloatingResizableComponent } from "./components/motion/FloatingResizableComponent";
+import { VideoEngine } from "./players/video/VideoEngine";
+import { ExpandedVideoPlayer, MiniVideoPlayer } from "./players/VideoPlayer";
+import { useVideoPlayerStore } from "./stores/useVideoPlayerStore";
+import { AudioEngine } from "./players/audio/AudioEngine";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const activeScreen = useNavStore((state) => state.activeScreen);
+  const activeMedia = useNavStore((state) => state.activeMedia);
+  const deferred = useNavStore((state) => state.deferred);
+
+  const isExpanded = useVideoPlayerStore((state) => state.isExpanded);
+
+  const [screen, setScreen] = useState<Screen>(activeScreen);
+
+  if (activeScreen !== screen && deferred === false) setScreen(activeScreen);
+
+  const ScreenComponent = SCREEN_MAP[screen];
+
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/mediaStreamer.js")
+        .then((reg) => console.log(`OPFS worker registered: ${reg}`))
+        .catch((err) => console.error(`Registration failed: ${err}`));
+    }
+  }, []);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <div className="w-dvw h-dvh flex flex-col bg-primary">
+      <PageContent>
+        <ScreenComponent />
+      </PageContent>
+      {activeMedia && activeMedia.category === "audio" && (
+        <>
+          <AudioEngine />
+          <FloatingComponent>
+            <AudioPlayer />
+          </FloatingComponent>
+        </>
+      )}
+      {activeMedia && activeMedia.category === "video" && (
+        <>
+          <VideoEngine />
+          {isExpanded ? (
+            <ExpandedVideoPlayer />
+          ) : (
+            // make it fullscreen somehow
+            <FloatingResizableComponent lockAspectRatio={true}>
+              <MiniVideoPlayer />
+            </FloatingResizableComponent>
+          )}
+        </>
+      )}
+      <MobileBottomBar />
+    </div>
+  );
 }
 
-export default App
+// export function InstallPWAButton() {
+//   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+//   const [isInstallable, setIsInstallable] = useState(false);
+
+//   useEffect(() => {
+//     const handleBeforeInstallPrompt = (e: Event) => {
+//       // Prevent the mini-infobar from appearing on mobile
+//       e.preventDefault();
+//       // Stash the event so it can be triggered later.
+//       setDeferredPrompt(e);
+//       // Update UI notify the user they can install the PWA
+//       setIsInstallable(true);
+//     };
+
+//     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+//     return () => {
+//       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+//     };
+//   }, []);
+
+//   const handleInstallClick = async () => {
+//     if (!deferredPrompt) return;
+
+//     // Show the native install prompt
+//     deferredPrompt.prompt();
+
+//     // Wait for the user to respond to the prompt
+//     const { outcome } = await deferredPrompt.userChoice;
+
+//     if (outcome === 'accepted') {
+//       console.log('User accepted the install prompt');
+//     }
+
+//     // We've used the prompt, and can't use it again, throw it away
+//     setDeferredPrompt(null);
+//     setIsInstallable(false);
+//   };
+
+//   if (!isInstallable) return null;
+
+//   return (
+//     <button
+//       onClick={handleInstallClick}
+//       className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-500 transition-colors"
+//     >
+//       <Download className="w-4 h-4" />
+//       Install App
+//     </button>
+//   );
+// }
+
+export default App;

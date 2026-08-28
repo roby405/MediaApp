@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+
+::view-transition-old(video-engine),
+::view-transition-new(video-engine) {
+  animation-duration: 200ms;
+  animation-timing-function: cubic-bezier(.17,.08,.85,.77);
+}
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@theme {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+}
+
+:root {
+  --primary: #000000;
+  --secondary: #ab1a1a;
+  --accent: #000000;
+  --text: #ffffff;
+  --text-secondary: #ffffff;
+}
+
+:root[data-theme="light"] {
+  --primary: #000000;
+  --secondary: #000000;
+  --accent: #000000;
+  --text: #ffffff;
+  --text-secondary: #ffffff;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}

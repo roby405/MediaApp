@@ -5,18 +5,17 @@
     "node": ">=18"
   },
   "scripts": {
-    "dev:web": "pnpm --filter web dev",
+    "dev:web": "pnpm --filter @media-app/web dev",
     "dev:mobile": "pnpm --filter mobile start",
     "dev:desktop": "pnpm --filter desktop tauri dev",
     
-    "build:web": "pnpm --filter web build",
+    "build:web": "pnpm --filter @media-app/web build",
     "build:mobile": "pnpm --filter mobile build",
     "build:desktop": "pnpm --filter desktop tauri build",
     
+    "lint:web": "pnpm --filter @media-app/web lint",
     "lint:all": "pnpm -r run lint",
-    "typecheck:all": "pnpm -r run typecheck",
-    
-    "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules"
+    "typecheck:all": "pnpm -r run typecheck"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

@@ -1,0 +1,93 @@
+import { PencilIcon, Trash2Icon } from "lucide-react-native";
+import { Modal, type BasicModalProps } from "./Modal";
+import type { MediaFile } from "../db/schema";
+import { useState } from "react";
+import { deleteFile, renameFile } from "../db/operations";
+import Rename from "./Rename";
+import DeleteFile from "./prompts/DeleteFile";
+import { Pressable, Text, View } from "react-native";
+
+interface MediaMenuProps extends BasicModalProps {
+  file: MediaFile;
+}
+
+export default function MediaMenu({ isOpen, onClose, file }: MediaMenuProps) {
+  const [renameModalOpen, setRenameModalOpen] = useState<boolean>(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
+
+  const handleRename = (name: string) => {
+    renameFile(file.id, `${name}.${file.extension}`).then(
+      () => {
+        console.log("succeeded");
+      },
+      () => {
+        console.log("failed");
+      },
+    );
+    setRenameModalOpen(false);
+    onClose();
+  };
+
+  const handleDelete = () => {
+    deleteFile(file.id).then(
+      () => {
+        console.log("succeeded");
+      },
+      () => {
+        console.log("failed");
+      },
+    );
+    setDeleteModalOpen(false);
+    onClose();
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} isPopup={true}>
+      <Pressable
+        className="absolute right-13 top-3 bg-gray-700 border-gray-400 border flex flex-col rounded-xl p-2 gap-2 pointer-events-auto"
+        onPress={(e) => e.stopPropagation()}
+      >
+        <Pressable
+          className="flex flex-row gap-2 items-center justify-center"
+          onPress={(e) => {
+            e.stopPropagation();
+            // onClose();
+            setRenameModalOpen(true);
+          }}
+        >
+          <PencilIcon className="w-5 h-5" strokeWidth={1.7} />
+          <Text className="text-lg">Rename File</Text>
+        </Pressable>
+        {renameModalOpen && (
+          <Rename
+            isOpen={renameModalOpen}
+            onClose={() => setRenameModalOpen(false)}
+            originalName={file.name.split(".").slice(0, -1).join(".")}
+            onRename={handleRename}
+          />
+        )}
+        <View className="h-px bg-gray-400/50"> </View>
+        <Pressable
+          className="flex flex-row gap-2 text-red-500 items-center justify-start"
+          onPress={(e) => {
+            e.stopPropagation();
+            // onClose();
+            setDeleteModalOpen(true);
+          }}
+        >
+          <Trash2Icon className="w-5 h-5" strokeWidth={1.7} />
+          <Text className="text-lg">Delete File</Text>
+        </Pressable>
+
+        {deleteModalOpen && (
+          <DeleteFile
+            isOpen={deleteModalOpen}
+            onClose={() => setDeleteModalOpen(false)}
+            onConfirm={handleDelete}
+            file={file}
+          />
+        )}
+      </Pressable>
+    </Modal>
+  );
+}

@@ -90,7 +90,7 @@ export const useMediaStore = create<MediaState>((set, get) => ({
       },
       byId: {
         ...state.byId,
-        id: {
+        [id]: {
           ...state.byId[id],
           is_favourite: favValue
         }

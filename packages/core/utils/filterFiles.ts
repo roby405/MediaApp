@@ -69,8 +69,8 @@ export function hasMatchingDate(
   return false;
 }
 
-export function filterFiles<T extends MediaFile>(
-  files: T[],
+export function filterFiles<T extends readonly MediaFile[]>(
+  files: T,
   filters: FilterParams,
   query: string,
 ) {

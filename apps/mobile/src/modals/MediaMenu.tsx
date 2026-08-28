@@ -2,7 +2,7 @@ import { PencilIcon, Trash2Icon } from "lucide-react-native";
 import { Modal, type BasicModalProps } from "./Modal";
 import type { MediaFile } from "../db/schema";
 import { useState } from "react";
-import { deleteFile, renameFile } from "../db/operations";
+// import { deleteFile, renameFile } from "../db/operations";
 import Rename from "./Rename";
 import DeleteFile from "./prompts/DeleteFile";
 import { Pressable, Text, View } from "react-native";
@@ -16,27 +16,27 @@ export default function MediaMenu({ isOpen, onClose, file }: MediaMenuProps) {
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
 
   const handleRename = (name: string) => {
-    renameFile(file.id, `${name}.${file.extension}`).then(
-      () => {
-        console.log("succeeded");
-      },
-      () => {
-        console.log("failed");
-      },
-    );
+    // renameFile(file.id, `${name}.${file.extension}`).then(
+    //   () => {
+    //     console.log("succeeded");
+    //   },
+    //   () => {
+    //     console.log("failed");
+    //   },
+    // );
     setRenameModalOpen(false);
     onClose();
   };
 
   const handleDelete = () => {
-    deleteFile(file.id).then(
-      () => {
-        console.log("succeeded");
-      },
-      () => {
-        console.log("failed");
-      },
-    );
+    // deleteFile(file.id).then(
+    //   () => {
+    //     console.log("succeeded");
+    //   },
+    //   () => {
+    //     console.log("failed");
+    //   },
+    // );
     setDeleteModalOpen(false);
     onClose();
   };

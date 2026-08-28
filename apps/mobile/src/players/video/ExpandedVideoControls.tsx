@@ -1,4 +1,3 @@
-import { useVideoPlayerStore } from "../../../../../packages/core/stores/useVideoPlayerStore";
 import {
   GaugeIcon,
   ListVideoIcon,
@@ -13,24 +12,25 @@ import {
   Volume2Icon,
   VolumeOffIcon,
 } from "lucide-react-native";
-import { useNavStore } from "../../../../../packages/core/stores/useNavStore";
-import { useMediaStore } from "../../../../../packages/core/stores/useMediaStore";
 import { TimeViewer, VideoProgressBar } from "./VideoProgressBar";
-import { startViewTransition } from "../../utils/startViewTransition";
+// import { startViewTransition } from "../../utils/startViewTransition";
 import { IconButton } from "../../components/buttons/IconButton";
 import {
   VideoPlaybackMenu,
   VideoQueueMenu,
   VideoVolumeMenu,
 } from "../../modals/VideoPlayerSettings";
-import { useActiveMedia } from "../../../../../packages/core/hooks/useActiveMedia";
 import { Text, View } from "react-native";
+import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore";
+import { useNavStore } from "@media-app/core/stores/useNavStore";
+import { useMediaStore } from "@media-app/core/stores/useMediaStore";
+import { useActiveMedia } from "@media-app/core/hooks/useActiveMedia";
 
 export function ExpandedVideoControls() {
   const isPlaying = useVideoPlayerStore((state) => state.isPlaying);
   const goToPrev = useNavStore((state) => state.goToPreviousMedia);
   const goToNext = useNavStore((state) => state.goToNextMedia);
-  const togglePlaying = useVideoPlayerStore((state) => state.togglePlaying);
+  const setPlaying = useVideoPlayerStore((state) => state.setPlaying);
   const volume = useVideoPlayerStore((state) => state.volume);
   const toggleFavourite = useMediaStore((state) => state.toggleFavourite);
   const {file} = useActiveMedia();
@@ -96,7 +96,7 @@ export function ExpandedVideoControls() {
           }}
         />
         <IconButton
-          onPress={togglePlaying}
+          onPress={() => setPlaying(!isPlaying)}
           Icon={isPlaying ? PauseIcon : PlayIcon}
           className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-gray-100"
           iconProps={{
@@ -142,7 +142,7 @@ export function ExpandedVideoControls() {
               />
             </View>
             <IconButton
-              onPress={() => startViewTransition(() => setExpanded(false))}
+              onPress={() => setExpanded(false)}
               Icon={MinimizeIcon}
             />
           </View>

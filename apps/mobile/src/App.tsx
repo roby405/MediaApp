@@ -8,14 +8,13 @@ import type { Screen } from "../../../packages/core/types/global";
 import { AudioPlayer } from "./players/AudioPlayer";
 import { FloatingComponent } from "./components/motion/FloatingComponent";
 import { FloatingResizableComponent } from "./components/motion/FloatingResizableComponent";
-import { VideoEngine } from "./players/video/VideoEngine";
 import { ExpandedVideoPlayer, MiniVideoPlayer } from "./players/VideoPlayer";
 import { useVideoPlayerStore } from "../../../packages/core/stores/useVideoPlayerStore";
-import { AudioEngine } from "./players/audio/AudioEngine";
 import { useState } from "react";
 import { View } from "react-native";
 import { MediaScreen } from "./screens/MediaScreen";
 import { useAudioEngine } from "./hooks/useAudioEngine";
+import { useVideoEngine } from "./hooks/useVideoEngine";
 
 function App() {
   const activeScreen = useNavStore((state) => state.activeScreen);
@@ -37,6 +36,7 @@ function App() {
   }
   
   useAudioEngine();
+  useVideoEngine();
   // useEffect(() => {
   //   if ("serviceWorker" in navigator) {
   //     navigator.serviceWorker
@@ -60,7 +60,6 @@ function App() {
       )}
       {activeMedia && activeMedia.category === "video" && (
         <>
-          <VideoEngine />
           {isExpanded ? (
             <ExpandedVideoPlayer />
           ) : (

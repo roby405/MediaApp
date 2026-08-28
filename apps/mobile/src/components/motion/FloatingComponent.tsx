@@ -1,5 +1,11 @@
 import { useRef, type ReactNode } from "react";
-import { motion, useDragControls } from "framer-motion";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { useWindowDimensions, View } from "react-native";
 
 interface FloatingComponentProps {
   children: ReactNode;
@@ -10,37 +16,51 @@ export function FloatingComponent({
   children,
   className = "",
 }: FloatingComponentProps) {
-  const constraintsRef = useRef<HTMLDivElement>(null);
-  const dragControls = useDragControls();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+
+  const xTranslate = useSharedValue(0);
+  const yTranslate = useSharedValue(0);
+  const xStart = useSharedValue(0);
+  const yStart = useSharedValue(0);
+
+    const panGesture = Gesture.Pan()
+    .onStart(() => {
+      xStart.value = xTranslate.value;
+      yStart.value = yTranslate.value;
+    })
+    .onUpdate((e) => {
+      xTranslate.value = xStart.value + e.translationX;
+      yTranslate.value = yStart.value + e.translationY;
+    })
+    .onEnd(() => {
+      const boundX = screenWidth * 0.4;
+      const boundY = screenHeight * 0.4;
+      if (Math.abs(xTranslate.value) > boundX)
+        xTranslate.value = withSpring(Math.sign(xTranslate.value) * boundX);
+      if (Math.abs(yTranslate.value) > boundY)
+        yTranslate.value = withSpring(Math.sign(yTranslate.value) * boundY);
+    });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: xTranslate.value },
+      { translateY: yTranslate.value },
+    ],
+  }));
 
   return (
-    <div
-      ref={constraintsRef}
-      className="fixed pb-24 flex justify-center items-end w-full inset-0 pointer-events-none z-40"
+    <View
+      pointerEvents="box-none"
+      className="absolute inset-0 pb-24 items-center justify-end z-40"
     >
-      <motion.div
-        drag
-        dragListener={false}
-        dragControls={dragControls}
-        dragMomentum={true}
-        dragTransition={{
-          power: 0.05,
-          timeConstant: 200,
-          bounceStiffness: 300,
-          bounceDamping: 20,
-        }}
-        dragConstraints={constraintsRef}
-        onPointerDown={(e) => {
-          const target = e.target as Element;
-          if (target.closest(".no-drag"))
-            return;
-
-          dragControls.start(e);
-        }}
-        className={`w-[90%] max-w-lg max-h-[90%] flex items-center justify-center p-2 rounded-xl rounded-tr-3xl bg-white/20 backdrop-blur-xl border border-white/10 shadow-2xl pointer-events-auto touch-none active:cursor-grabbing cursor-grab overflow-hidden ${className}`}
-      >
-        {children}
-      </motion.div>
-    </div>
+      <GestureDetector gesture={panGesture}>
+        <Animated.View
+          style={animatedStyle}
+          className={`w-[90%] max-w-lg max-h-[90%] p-2 rounded-xl rounded-tr-3xl bg-white/20 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden ${className}`}
+        >
+          {children}
+        </Animated.View>
+      </GestureDetector>
+    </View>
   );
 }

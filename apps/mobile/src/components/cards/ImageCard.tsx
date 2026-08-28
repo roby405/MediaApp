@@ -1,8 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-import { useEffect, useState } from "react";
 import { formatDate } from "../../../../../packages/core/utils/formatDate";
 import { formatSize } from "../../../../../packages/core/utils/formatSize";
-import { MediaMenuButton } from "../buttons/MediaMenuButton";
 import Card, { BasicCardProps } from "./Card";
 import { ImageMediaFile } from "../../db/schema";
 

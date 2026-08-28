@@ -1,26 +1,23 @@
+import { useActiveMedia } from "@media-app/core/hooks/useActiveMedia";
 import { Slider } from "../../components/Slider";
-import { useActiveMedia } from "../../../../../packages/core/hooks/useActiveMedia";
-import { useVideoPlayerStore } from "../../../../../packages/core/stores/useVideoPlayerStore";
-import { formatLength } from "../../../../../packages/core/utils/formatLength";
 import { Text } from "react-native";
+import { useVideoProgress } from "src/hooks/useVideoProgress";
+import { formatLength } from "@media-app/core/utils/formatLength";
+import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore";
 
 export function TimeViewer() {
-  const currentTime = useVideoPlayerStore((state) => state.currentTime);
+  const currentTime = useVideoProgress();
   const {file} = useActiveMedia("video");
   if (!file) return null;
   return <Text>{`${formatLength(currentTime)}/${formatLength(file.metadata.duration)}`}</Text>
 }
 
 export function VideoProgressBar() {
-  const currentTime = useVideoPlayerStore((state) => state.currentTime);
+  const currentTime = useVideoProgress();
   const {file} = useActiveMedia("video");
-  const seek = useVideoPlayerStore((state) => state.seek);
+  const seek = useVideoPlayerStore((state) => state.videoRef?.seek);
 
-  const handleSeek = (val: number) => {
-    seek(val)
-  };
-
-  if (!file)
+  if (!file || !seek)
     return null;
 
   return (
@@ -32,7 +29,7 @@ export function VideoProgressBar() {
       value={currentTime}
       className="w-full"
       onChange={(e) => {
-        handleSeek(e);
+        seek(e);
       }}
     />
   );

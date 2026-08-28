@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 
 import ImportScreen from "./ImportScreen";
-import type { MediaType, Screen } from "../../../../packages/core/types/global";
+import type { MediaType, Screen } from "@media-app/core/types/global";
 
 export function isMediaScreen(screen: Screen): screen is MediaType {
   return screen in ["audio", "video", "image", "book"]

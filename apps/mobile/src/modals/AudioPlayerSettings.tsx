@@ -1,7 +1,7 @@
 import { Pressable } from "react-native";
 import { Slider } from "../components/Slider";
-import { useAudioPlayerStore } from "../../../../packages/core/stores/useAudioPlayerStore";
 import { Modal, type BasicModalProps } from "./Modal";
+import { useAudioPlayerStore } from "@media-app/core/stores/useAudioPlayerStore";
 
 export function AudioVolumeMenu({ isOpen, onClose }: BasicModalProps) {
   const volume = useAudioPlayerStore((state) => state.volume);

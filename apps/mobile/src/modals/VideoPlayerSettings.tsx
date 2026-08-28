@@ -1,12 +1,12 @@
 import { Slider } from "../components/Slider";
-import { useMediaStore } from "../../../../packages/core/stores/useMediaStore";
-import { useNavStore } from "../../../../packages/core/stores/useNavStore";
-import { useVideoPlayerStore } from "../../../../packages/core/stores/useVideoPlayerStore";
-import { formatLength } from "../../../../packages/core/utils/formatLength";
-import { formatPlaybackSpeed } from "../../../../packages/core/utils/formatPlaybackSpeed";
 import { Modal, type BasicModalProps } from "./Modal";
 import { Image, Pressable, Text, View } from "react-native";
 import { getCoverUrl } from "../utils/getMediaUrl";
+import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore";
+import { formatPlaybackSpeed } from "@media-app/core/utils/formatPlaybackSpeed";
+import { useNavStore } from "@media-app/core/stores/useNavStore";
+import { useMediaStore } from "@media-app/core/stores/useMediaStore";
+import { formatLength } from "@media-app/core/utils/formatLength";
 
 export function VideoVolumeMenu({ isOpen, onClose }: BasicModalProps) {
   const volume = useVideoPlayerStore((state) => state.volume);

@@ -1,15 +1,15 @@
-import AudioCard from "../components/cards/AudioCard";
-import type { AudioMediaFile, MediaFile } from "../db/schema";
-import { useMediaStore } from "../../../../packages/core/stores/useMediaStore";
-import { useScreenViewStore } from "../../../../packages/core/stores/useScreenViewStore";
-import { useNavStore } from "../../../../packages/core/stores/useNavStore";
+
+import type { MediaFile } from "../db/schema";
 import { useEffect, useMemo } from "react";
-import { useFilterStore } from "../../../../packages/core/stores/useFilterStore";
-import { filterFiles } from "../../../../packages/core/utils/filterFiles";
 import { MediaType } from "@media-app/core/types/global";
 import { View } from "react-native";
 import { CardRegistry } from "../components/cards/registry";
 import { GRID_LAYOUT_MAP } from ".";
+import { useScreenViewStore } from "@media-app/core/stores/useScreenViewStore";
+import { useNavStore } from "@media-app/core/stores/useNavStore";
+import { useMediaStore } from "@media-app/core/stores/useMediaStore";
+import { useFilterStore } from "@media-app/core/stores/useFilterStore";
+import { filterFiles } from "@media-app/core/utils/filterFiles";
 
 export interface ScreenProps {
   type: MediaType;

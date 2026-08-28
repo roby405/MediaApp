@@ -1,31 +1,23 @@
-import { useLayoutEffect, useRef } from "react";
-import { useVideoPlayerStore } from "../../../../../packages/core/stores/useVideoPlayerStore";
+import { View } from "react-native";
+import { VideoView } from "expo-video";
+import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore";
 
 export function VideoOutlet() {
   const videoRef = useVideoPlayerStore((state) => state.videoRef);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const player = videoRef?.videoEngine;
 
-  useLayoutEffect(() => {
-    if (videoRef && containerRef.current) {
-      containerRef.current.appendChild(videoRef);
-    }
-
-    return () => {
-      const videoEngine = document.getElementById("video-engine");
-      if (!videoEngine) {
-        console.error("Video engine doesn't exist")
-        return;
-      }
-      if (!videoRef) {
-        console.error("Video no longer exists for whatever reason");
-        return;
-      }
-      videoEngine.appendChild(videoRef);
-    }
-
-  }, [videoRef])
+  if (!player) return <View className="bg-black w-full h-full" />;
 
   return (
-    <div ref={containerRef} className="w-full h-full rounded-[inherit] overflow-hidden" />
-  )
+    <View className="w-full h-full rounded-[inherit] overflow-hidden">
+      <VideoView
+        player={player}
+        className="w-full h-full"
+        nativeControls={false}
+        contentFit="contain"
+        allowsFullscreen
+        allowsPictureInPicture
+      />
+    </View>
+  );
 }

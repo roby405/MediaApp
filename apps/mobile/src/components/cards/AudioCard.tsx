@@ -1,9 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-import { useEffect, useState } from "react";
 import type { AudioMediaFile } from "../../db/schema";
 import { formatLength } from "@media-app/core/utils/formatLength";
-import { MediaMenuButton } from "../buttons/MediaMenuButton";
-import { Image, Pressable, View } from "react-native";
 import Card, { BasicCardProps } from "./Card";
 
 type AudioCardProps = BasicCardProps & {

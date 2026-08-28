@@ -1,7 +1,5 @@
 import { useState } from "react";
 import FilterMedia from "../modals/FilterMedia";
-import { useNavStore } from "../../../../packages/core/stores/useNavStore";
-import { useScreenViewStore } from "../../../../packages/core/stores/useScreenViewStore";
 import {
   ArrowLeftIcon,
   EllipsisVertical,
@@ -12,8 +10,10 @@ import {
 } from "lucide-react-native";
 import SearchMedia from "../modals/SearchMedia";
 import { IconButton } from "./buttons/IconButton";
-import { useActiveMedia } from "../../../../packages/core/hooks/useActiveMedia";
 import { Pressable, View, Text } from "react-native";
+import { useScreenViewStore } from "@media-app/core/stores/useScreenViewStore";
+import { useNavStore } from "@media-app/core/stores/useNavStore";
+import { useActiveMedia } from "@media-app/core/hooks/useActiveMedia";
 
 const ITEMS: Record<string, string> = {
   book: "Books",

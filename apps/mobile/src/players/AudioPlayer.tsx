@@ -1,4 +1,3 @@
-import { useAudioPlayerStore } from "../../../../packages/core/stores/useAudioPlayerStore";
 import {
   ListMusicIcon,
   PauseIcon,
@@ -11,22 +10,23 @@ import {
   Volume2Icon,
   VolumeOffIcon,
 } from "lucide-react-native";
-import { useNavStore } from "../../../../packages/core/stores/useNavStore";
 import { ScrollingText } from "../components/motion/ScrollingText";
-import { motion } from "framer-motion";
-import { useMediaStore } from "../../../../packages/core/stores/useMediaStore";
 import { Slider } from "../components/Slider";
 import { AudioVolumeMenu } from "../modals/AudioPlayerSettings";
 import { IconButton } from "../components/buttons/IconButton";
 import { CoverImage } from "../components/CoverImage";
-import { useActiveMedia } from "../../../../packages/core/hooks/useActiveMedia";
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
+import { useProgress } from "react-native-track-player";
+import { useAudioPlayerStore } from "@media-app/core/stores/useAudioPlayerStore";
+import { useNavStore } from "@media-app/core/stores/useNavStore";
+import { useMediaStore } from "@media-app/core/stores/useMediaStore";
+import { useActiveMedia } from "@media-app/core/hooks/useActiveMedia";
 
 export function MiniAudioControls() {
   const isPlaying = useAudioPlayerStore((state) => state.isPlaying);
   const goToPrev = useNavStore((state) => state.goToPreviousMedia);
   const goToNext = useNavStore((state) => state.goToNextMedia);
-  const togglePlaying = useAudioPlayerStore((state) => state.togglePlaying);
+  const setPlaying = useAudioPlayerStore((state) => state.setPlaying);
 
   return (
     <View className="flex flex-row justify-center gap-2 pointer-events-auto">
@@ -36,7 +36,7 @@ export function MiniAudioControls() {
         iconProps={{ fill: "currentColor" }}
       />
       <IconButton
-        onPress={togglePlaying}
+        onPress={() => setPlaying(!isPlaying)}
         className=" bg-white"
         Icon={isPlaying ? PauseIcon : PlayIcon}
         iconProps={{ fill: "currentColor", className: "text-gray-800 w-7 h-7" }}
@@ -54,7 +54,7 @@ export function ExtendedAudioControls() {
   const isPlaying = useAudioPlayerStore((state) => state.isPlaying);
   const goToPrev = useNavStore((state) => state.goToPreviousMedia);
   const goToNext = useNavStore((state) => state.goToNextMedia);
-  const togglePlaying = useAudioPlayerStore((state) => state.togglePlaying);
+  const setPlaying = useAudioPlayerStore((state) => state.setPlaying);
   const volume = useAudioPlayerStore((state) => state.volume);
   const toggleFavourite = useMediaStore((state) => state.toggleFavourite);
   const {file} = useActiveMedia();
@@ -96,7 +96,7 @@ export function ExtendedAudioControls() {
           iconProps={{ fill: "currentColor" }}
         />
         <IconButton
-          onPress={togglePlaying}
+          onPress={() => setPlaying(!isPlaying)}
           className=" bg-white"
           Icon={isPlaying ? PauseIcon : PlayIcon}
           iconProps={{
@@ -126,20 +126,20 @@ export function ExtendedAudioControls() {
 }
 
 export function AudioProgressBar() {
-  const onSeek = useAudioPlayerStore((state) => state.onSeek);
-  const currentTime = useAudioPlayerStore((state) => state.currentTime);
+  const seek = useAudioPlayerStore((state) => state.audioRef?.seek);
+  const { position } = useProgress();
 
   const {file} = useActiveMedia("audio");
 
-  if (!file) return null;
+  if (!file || !seek) return null;
 
   return (
     <Slider
       min={0}
       max={file.metadata.duration}
       step={0.1}
-      value={currentTime}
-      onChange={(val) => onSeek(val)}
+      value={position}
+      onChange={(val) => seek(val)}
       className="w-full no-drag"
     />
   );
@@ -149,11 +149,12 @@ export function MiniAudioPlayer() {
   const setExtended = useAudioPlayerStore((state) => state.setExtended);
   const {file} = useActiveMedia("audio");
   if (!file) return null;
+  // TODO fix onpress to on tap from motion
   return (
     <View className="h-24 select-none w-full grid grid-cols-[1fr_auto] gap-3 items-center justify-center">
-      <motion.View
+      <Pressable
         className="grid grid-cols-[auto_1fr] h-full gap-3"
-        onTap={() => {
+        onPress={() => {
           setExtended(true);
         }}
       >
@@ -165,7 +166,7 @@ export function MiniAudioPlayer() {
           />
           <Text className="text-gray-300 truncate">{file.metadata.artist}</Text>
         </View>
-      </motion.View>
+      </Pressable>
       <View className="flex align-center flex-col">
         <MiniAudioControls />
       </View>
@@ -177,11 +178,12 @@ export function ExtendedAudioPlayer() {
   const setExtended = useAudioPlayerStore((state) => state.setExtended);
   const {file} = useActiveMedia("audio");
   if (!file) return null;
+  // TODO same stuff
   return (
     <View className="select-none w-full flex flex-col gap-3 mb-8">
-      <motion.View
+      <Pressable
         className="flex-col gap-3 flex"
-        onTap={() => {
+        onPress={() => {
           setExtended(false);
         }}
       >
@@ -193,7 +195,7 @@ export function ExtendedAudioPlayer() {
           />
           <Text className="text-gray-300 truncate">{file.metadata.artist}</Text>
         </View>
-      </motion.View>
+      </Pressable>
       <AudioProgressBar />
 
       <ExtendedAudioControls />

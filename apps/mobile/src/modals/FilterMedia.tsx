@@ -1,9 +1,5 @@
-import { useFilterStore } from "../../../../packages/core/stores/useFilterStore";
-import { MB, type MediaType } from "../../../../packages/core/types/global";
+import { MB, type MediaType } from "@media-app/core/types/global";
 import { Modal, type BasicModalProps } from "./Modal";
-import type { FileSize } from "../../../../packages/core/types/filter";
-import { useMediaStore } from "../../../../packages/core/stores/useMediaStore";
-import { toDateInputValue } from "../../../../packages/core/utils/formatDate";
 import { useState } from "react";
 import {
   FilterParams,
@@ -11,6 +7,9 @@ import {
   getFileSizeCounts,
 } from "@media-app/core/utils/filterFiles";
 import { Pressable, Switch, Text, TextInput, View } from "react-native";
+import { useMediaStore } from "@media-app/core/stores/useMediaStore";
+import { useFilterStore } from "@media-app/core/stores/useFilterStore";
+import { FileSize } from "@media-app/core/types/filter";
 
 interface FilterProps extends BasicModalProps {
   category: MediaType;

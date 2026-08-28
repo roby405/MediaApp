@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { Modal, type BasicModalProps } from "./Modal";
-import type { MediaType } from "../../../../packages/core/types/global";
-import { useFilterStore } from "../../../../packages/core/stores/useFilterStore";
+import type { MediaType } from "@media-app/core/types/global";
 import { Text, TextInput, View } from "react-native";
+import { useFilterStore } from "@media-app/core/stores/useFilterStore";
 
 interface SearchProps extends BasicModalProps {
   category: MediaType;

@@ -1,4 +1,3 @@
-import { useVideoPlayerStore } from "../../../../../packages/core/stores/useVideoPlayerStore";
 import {
   MaximizeIcon,
   PauseIcon,
@@ -10,21 +9,20 @@ import {
   VolumeOffIcon,
 } from "lucide-react-native";
 import { useNavStore } from "../../../../../packages/core/stores/useNavStore";
-import { toggleFullscreen } from "../../utils/toggleFullscreen";
 import { IconButton } from "../../components/buttons/IconButton";
 import { Pressable, View } from "react-native";
+import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore";
 
 interface MiniVideoControlsProps {
   startViewTransition: () => void;
 }
 
 export function MiniVideoControls({
-  startViewTransition,
 }: MiniVideoControlsProps) {
   const isPlaying = useVideoPlayerStore((state) => state.isPlaying);
   const goToPrev = useNavStore((state) => state.goToPreviousMedia);
   const goToNext = useNavStore((state) => state.goToNextMedia);
-  const togglePlaying = useVideoPlayerStore((state) => state.togglePlaying);
+  const setPlaying = useVideoPlayerStore((state) => state.setPlaying);
   const volume = useVideoPlayerStore((state) => state.volume);
 
   return (
@@ -32,11 +30,11 @@ export function MiniVideoControls({
       <IconButton
         Icon={MaximizeIcon}
         onPress={() => {
-          toggleFullscreen("expanded-video-player").then(
-            () => console.log("fullscreen"),
-            () => console.error("epic fail"),
-          );
-          startViewTransition();
+          // toggleFullscreen("expanded-video-player").then(
+          //   () => console.log("fullscreen"),
+          //   () => console.error("epic fail"),
+          // );
+          // startViewTransition();
         }}
       />
       <View className="flex flex-col items-center justify-center gap-2 pointer-events-auto">
@@ -46,7 +44,7 @@ export function MiniVideoControls({
           iconProps={{ fill: "currentColor" }}
         />
         <IconButton
-          onPress={togglePlaying}
+          onPress={() => setPlaying(!isPlaying)}
           className=" bg-white"
           Icon={isPlaying ? PauseIcon : PlayIcon}
           iconProps={{

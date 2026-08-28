@@ -74,122 +74,81 @@
 // }
 
 
-import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
-import { motion } from "framer-motion";
+// literally ai btw
 
-type SliderProps = {
-  orientation?: "h" | "v";
-  length?: string;
+import React from "react";
+import NativeSlider from "@react-native-community/slider";
+import { View, DimensionValue } from "react-native";
+
+export interface SliderProps {
   value: number;
+  orientation?: "h" | "v";
+  reverse?: boolean;
   min?: number;
   max?: number;
   step?: number;
-  onChange: (value: number) => void;
+  length?: string | number;
   className?: string;
-};
+  onChange: (value: number) => void;
+}
 
-// literally ai btw
+// Convert length props ("full", "40", 160, etc.) to React Native Dimension
+function parseLength(len?: string | number, isVertical = false): DimensionValue {
+  if (!len || len === "full") return "100%";
+  if (typeof len === "number") return len;
+  
+  const num = parseFloat(len);
+  if (isNaN(num)) return len as DimensionValue;
+  
+  // Tailwind-style spacing units (e.g., length="40" -> 160px)
+  if (num <= 96 && !len.includes("%") && !len.includes("px")) {
+    return num * 4;
+  }
+  return num;
+}
+
 export function Slider({
   value,
   orientation = "h",
+  reverse = false,
   min = 0,
   max = 100,
   step = 1,
+  length = "full",
   className = "",
-  length = "40",
   onChange,
 }: SliderProps) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const isH = orientation === "h";
+  const isV = orientation === "v";
+  const dimensionLength = parseLength(length, isV);
 
-  const updateValue = (clientX: number, clientY: number) => {
-    if (!trackRef.current) return;
-    const rect = trackRef.current.getBoundingClientRect();
-
-    // Fix 1: Adjust the math by 10px (half thumb) and 20px (full thumb)
-    // so the pointer maps exactly to the visual boundaries.
-    let percent = isH
-      ? (clientX - rect.left - 10) / (rect.width - 20)
-      : 1 - ((clientY - rect.top - 10) / (rect.height - 20));
-
-    percent = Math.max(0, Math.min(1, percent));
-    let newValue = min + percent * (max - min);
-
-    if (step) {
-      newValue = Math.round(newValue / step) * step;
-    }
-
-    onChange(newValue);
-  };
-
-  const handlePointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    e.currentTarget.setPointerCapture(e.pointerId);
-    setIsDragging(true);
-    updateValue(e.clientX, e.clientY);
-    e.stopPropagation();
-  };
-
-  const handlePointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (!isDragging) return;
-    updateValue(e.clientX, e.clientY);
-  };
-
-  const handlePointerUp = (e: ReactPointerEvent<HTMLDivElement>) => {
-    e.currentTarget.releasePointerCapture(e.pointerId);
-    setIsDragging(false);
-    e.stopPropagation();
-  };
-
-  const ratio = Math.max(0, Math.min(1, (value - min) / (max - min)));
+  // Default rotation for vertical: -90deg (bottom = 0, top = max)
+  const rotation = isV ? (reverse ? "90deg" : "-90deg") : (reverse ? "180deg" : "0deg");
 
   return (
-    <div
-      className={`relative flex items-center justify-center touch-none cursor-pointer ${
-        isH ? `h-8` : `w-8`
-      } ${className}`}
-      style={isH? {width: length} : {height: length}}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
-      onClick={(e) => e.stopPropagation()}
+    <View
+      className={`relative flex items-center justify-center ${className}`}
+      style={
+        isV
+          ? { height: dimensionLength, width: 40 }
+          : { width: dimensionLength, height: 40 }
+      }
     >
-      <div
-        ref={trackRef}
-        className={`relative bg-gray-600 rounded-full ${
-          isH ? "w-full h-2" : "h-full w-2"
-        }`}
-      >
-        {/* Fix 2: The fill line travels perfectly up to the center of the bounded thumb (10px offset) */}
-        <div
-          className="absolute bg-white rounded-full pointer-events-none"
-          style={
-            isH
-              ? { left: 0, top: 0, bottom: 0, width: `calc(${ratio} * (100% - 20px) + 10px)` }
-              : { left: 0, right: 0, bottom: 0, height: `calc(${ratio} * (100% - 20px) + 10px)` }
-          }
-        />
-
-        {/* Fix 3: The thumb is strictly positioned within the remaining track area (100% - 20px) */}
-        <motion.div
-          className="absolute w-5 h-5 bg-white rounded-full shadow-md pointer-events-none"
-          style={
-            isH
-              ? { left: `calc(${ratio} * (100% - 20px))`, top: "50%" }
-              : { bottom: `calc(${ratio} * (100% - 20px))`, left: "50%" }
-          }
-          initial={false}
-          animate={{
-            scale: isDragging ? 1.25 : 1,
-            // Cross-axis centering only. We removed the primary-axis offset because 
-            // the CSS calc() handles the visual boundaries perfectly now.
-            x: isH ? 0 : "-50%",
-            y: isH ? "-50%" : 0,
-          }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        />
-      </div>
-    </div>
+      <NativeSlider
+        style={{
+          width: isV ? (typeof dimensionLength === "number" ? dimensionLength : 140) : "100%",
+          height: 40,
+          transform: [{ rotate: rotation }],
+        }}
+        value={value}
+        minimumValue={min}
+        maximumValue={max}
+        step={step}
+        onValueChange={onChange}
+        // Custom styling matching your dark theme
+        minimumTrackTintColor="#FFFFFF" // Filled track
+        maximumTrackTintColor="#4B5563" // Unfilled track
+        thumbTintColor="#FFFFFF"        // Circle thumb
+      />
+    </View>
   );
 }

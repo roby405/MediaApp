@@ -3,11 +3,7 @@ import { useNavStore } from "@media-app/core/stores/useNavStore";
 import { useEffect, useRef } from "react";
 import TrackPlayer, {
   Capability,
-  State,
   Event,
-  Track,
-  useProgress,
-  usePlaybackState,
   AppKilledPlaybackBehavior,
   useTrackPlayerEvents,
 } from "react-native-track-player";

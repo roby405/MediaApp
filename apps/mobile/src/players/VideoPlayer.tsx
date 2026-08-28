@@ -1,12 +1,10 @@
-import { useVideoPlayerStore } from "../../../../packages/core/stores/useVideoPlayerStore";
 
-import { motion } from "framer-motion";
 import { MiniVideoControls } from "./video/MiniVideoControls";
 import { ExpandedVideoControls } from "./video/ExpandedVideoControls";
 import { VideoOutlet } from "./video/VideoOutlet";
-import { startViewTransition } from "../utils/startViewTransition";
 import { useNavStore } from "../../../../packages/core/stores/useNavStore";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
+import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore";
 export function MiniVideoPlayer() {
   const activeMedia = useNavStore((state) => state.activeMedia);
   const setExpanded = useVideoPlayerStore((state) => state.setExpanded);
@@ -17,7 +15,7 @@ export function MiniVideoPlayer() {
         <VideoOutlet />
       </View>
       <MiniVideoControls
-        startViewTransition={() => startViewTransition(() => setExpanded(true))}
+        startViewTransition={() => setExpanded(true)}
       />
     </View>
   );
@@ -50,10 +48,9 @@ export function ExpandedVideoPlayer() {
       <VideoOutlet />
 
 
-      <motion.View 
+      <Pressable
         className="absolute inset-0 z-10"
-        onTap={pingTimer} 
-        onPointerMove={handlePointerMove} 
+        onPress={pingTimer}
       />
 
       {controlsVisible && <ExpandedVideoControls />}

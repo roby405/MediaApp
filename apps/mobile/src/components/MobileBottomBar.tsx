@@ -1,3 +1,6 @@
+import { useImportStore } from "@media-app/core/stores/useImportStore";
+import { useNavStore } from "@media-app/core/stores/useNavStore";
+import type { Screen } from "@media-app/core/types/global"
 import {
   BookOpen,
   Images,
@@ -6,10 +9,7 @@ import {
   Music,
   type LucideIcon,
 } from "lucide-react-native";
-import { useNavStore } from "../../../../packages/core/stores/useNavStore";
 import { useRef } from "react";
-import { useImportStore } from "../../../../packages/core/stores/useImportStore";
-import type { Screen } from "../../../../packages/core/types/global";
 import { Pressable, Text, View } from "react-native";
 
 export interface NavItem {

@@ -1,11 +1,11 @@
-import { flushSync } from "react-dom";
+// import { flushSync } from "react-dom";
 
-export function startViewTransition(callbackfn: () => void) {
-  if (!document.startViewTransition) {
-    callbackfn();
-    return;
-  }
-  document.startViewTransition(() => {
-    flushSync(callbackfn);
-  });
-}
+// export function startViewTransition(callbackfn: () => void) {
+//   if (!document.startViewTransition) {
+//     callbackfn();
+//     return;
+//   }
+//   document.startViewTransition(() => {
+//     flushSync(callbackfn);
+//   });
+// }

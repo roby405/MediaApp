@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { Timer } from "../../../apps/mobile/src/utils/Timer";
+// import { Timer } from "../../../apps/mobile/src/utils/Timer";
 import { MediaController } from "../interfaces/MediaController";
 
-const controlsTimer = new Timer();
+// const controlsTimer = new Timer();
 
 interface VideoController extends MediaController {
   // nothing you can do about it
@@ -20,7 +20,7 @@ interface VideoPlayerState {
   setActiveMenu: (val: VideoMenuType) => void;
   setControlsVisible: (val: boolean) => void;
   setExpanded: (val: boolean) => void;
-  setVideoRef: (videoRef: VideoController) => void;
+  setVideoRef: (videoRef: VideoController | null) => void;
   setVolume: (val: number) => void;
   setPlaying: (val: boolean) => void;
   setPlaybackSpeed: (val: number) => void;
@@ -64,15 +64,15 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set, get) => ({
     set({ controlsVisible: true });
 
     // The SmartTimer handles clearing its previous instance automatically
-    controlsTimer.run(5000, () => {
-      const state = get();
-      if (state.isPlaying && state.isExpanded && !state.activeMenu) {
-        set({ controlsVisible: false });
-      }
-    });
+    // controlsTimer.run(5000, () => {
+    //   const state = get();
+    //   if (state.isPlaying && state.isExpanded && !state.activeMenu) {
+    //     set({ controlsVisible: false });
+    //   }
+    // });
   },
 
   clearActivityTimer: () => {
-    controlsTimer.clear();
+    // controlsTimer.clear();
   },
 }));

@@ -1,16 +1,17 @@
 import { create } from "zustand";
-import type { AudioMediaFile, BookMediaFile, ImageMediaFile, MediaFile, VideoMediaFile } from "../../../apps/web/src/db/schema";
-import { saveFile } from "../../../apps/web/src/db/operations";
-import {
-  extractAudioCover,
-  extractCbzCover,
-  extractEpubCover,
-  extractImageCover,
-  extractPdfCover,
-  extractVideoCover,
-} from "../../../apps/web/src/utils/extractCovers";
+// import type { AudioMediaFile, BookMediaFile, ImageMediaFile, MediaFile, VideoMediaFile } from "../../../apps/web/src/db/schema";
+// import { saveFile } from "../../../apps/web/src/db/operations";
+// import {
+//   extractAudioCover,
+//   extractCbzCover,
+//   extractEpubCover,
+//   extractImageCover,
+//   extractPdfCover,
+//   extractVideoCover,
+// } from "../../../apps/web/src/utils/extractCovers";
 import type { MediaType } from "../types/global";
 import { extractAudioMetadata, extractCbzMetadata, extractEpubMetadata, extractImageMetadata, extractPdfMetadata, extractVideoMetadata } from "../../../apps/web/src/utils/extractMetadata";
+import { BookMediaFile, MediaFile } from "src/db/schema";
 
 interface ImportProgress {
   current: number;
@@ -100,85 +101,85 @@ async function createMediaFileObject(file: File): Promise<MediaFile> {
   };
 
   switch (extension)    {
-  case "epub": {
-      const res: BookMediaFile = {
-        ...base,
-        category: "book",
-        cover: await extractEpubCover(file),
-        metadata: await extractEpubMetadata(file),
-      }
-      return res;
-    }
+  // case "epub": {
+  //     const res: BookMediaFile = {
+  //       ...base,
+  //       category: "book",
+  //       cover: await extractEpubCover(file),
+  //       metadata: await extractEpubMetadata(file),
+  //     }
+  //     return res;
+  //   }
 
-    case "pdf": {
-      const res: BookMediaFile = {
-        ...base,
-        category: "book",
-        cover: await extractPdfCover(file),
-        metadata: await extractPdfMetadata(file),
-      }
-      return res;
-    }
+  //   case "pdf": {
+  //     const res: BookMediaFile = {
+  //       ...base,
+  //       category: "book",
+  //       cover: await extractPdfCover(file),
+  //       metadata: await extractPdfMetadata(file),
+  //     }
+  //     return res;
+  //   }
 
-    case "cbz": {
-      const res: BookMediaFile = {
-        ...base,
-        category: "book",
-        cover: await extractCbzCover(file),
-        metadata: await extractCbzMetadata(file),
-      }
-      return res;
-    }
+  //   case "cbz": {
+  //     const res: BookMediaFile = {
+  //       ...base,
+  //       category: "book",
+  //       cover: await extractCbzCover(file),
+  //       metadata: await extractCbzMetadata(file),
+  //     }
+  //     return res;
+  //   }
 
-    case "jpg":
-    case "jpeg":
-    case "png":
-    case "webp":
-    case "gif":
-    case "avif":
-    case "bmp":
-    case "svg": {
-      const res: ImageMediaFile = {
-        ...base,
-        category: "image",
-        cover: await extractImageCover(file),
-        metadata: await extractImageMetadata(file),
-      }
-      return res;
-    }
+  //   case "jpg":
+  //   case "jpeg":
+  //   case "png":
+  //   case "webp":
+  //   case "gif":
+  //   case "avif":
+  //   case "bmp":
+  //   case "svg": {
+  //     const res: ImageMediaFile = {
+  //       ...base,
+  //       category: "image",
+  //       cover: await extractImageCover(file),
+  //       metadata: await extractImageMetadata(file),
+  //     }
+  //     return res;
+  //   }
 
-    case "mp4":
-    case "webm":
-    case "mov":
-    case "mkv":
-    case "m4v":
-    case "wmv":
-    case "avi": {
-      const res: VideoMediaFile = {
-        ...base,
-        category: "video",
-        cover: await extractVideoCover(file),
-        metadata: await extractVideoMetadata(file),
-      }
-      return res;
-    }
+  //   case "mp4":
+  //   case "webm":
+  //   case "mov":
+  //   case "mkv":
+  //   case "m4v":
+  //   case "wmv":
+  //   case "avi": {
+  //     const res: VideoMediaFile = {
+  //       ...base,
+  //       category: "video",
+  //       cover: await extractVideoCover(file),
+  //       metadata: await extractVideoMetadata(file),
+  //     }
+  //     return res;
+  //   }
 
-    case "mp3":
-    case "wav":
-    case "ogg":
-    case "flac":
-    case "aac":
-    case "m4a":
-    case "opus":
-    case "wma": {
-      const res: AudioMediaFile = {
-        ...base,
-        category: "audio",
-        cover: await extractAudioCover(file),
-        metadata: await extractAudioMetadata(file),
-      }
-      return res;
-    }
+  //   case "mp3":
+  //   case "wav":
+  //   case "ogg":
+  //   case "flac":
+  //   case "aac":
+  //   case "m4a":
+  //   case "opus":
+  //   case "wma": {
+  //     const res: AudioMediaFile = {
+  //       ...base,
+  //       category: "audio",
+  //       cover: await extractAudioCover(file),
+  //       metadata: await extractAudioMetadata(file),
+  //     }
+  //     return res;
+  //   }
 
     default:
       return {
@@ -328,7 +329,7 @@ export const useImportStore = create<ImportState>((set) => ({
       });
       const mediaFile = await createMediaFileObject(file);
 
-      await saveFile(mediaFile, file);
+      // await saveFile(mediaFile, file);
     }
     set({ isImporting: false, importProgress: null });
   },

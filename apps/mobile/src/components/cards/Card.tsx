@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
 import type { AudioMediaFile, MediaFile } from "../../db/schema";
-import { formatLength } from "@media-app/core/utils/formatLength";
 import { MediaMenuButton } from "../buttons/MediaMenuButton";
 import { Image, Pressable, View } from "react-native";
 import { MediaType } from "@media-app/core/types/global";

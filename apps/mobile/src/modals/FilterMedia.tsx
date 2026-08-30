@@ -67,7 +67,7 @@ export default function FilterMedia({
       <View className="absolute bg-gray-500 top-13 left-0 right-0 min-w-[80%] min-h-[30%] mx-5 rounded-xl border border-gray-400 flex flex-col">
         <View className="flex-1 flex flex-row">
           <View className="flex flex-col flex-1 h-full">
-            <Text>Extensions</Text>
+            <AppText>Extensions</AppText>
             <View className="flex flex-col overflow-y-auto">
               {Object.entries(extensionCount).map(([key, val]) => (
                 <View className="flex flex-row" key={key}>
@@ -75,15 +75,15 @@ export default function FilterMedia({
                     value={draftFilter.selectedExtensions.includes(key)}
                     onValueChange={() => toggleExtension(key)}
                   />
-                  <Text>{key}</Text>
-                  <Text>{`(${val})`}</Text>
+                  <AppText>{key}</AppText>
+                  <AppText>{`(${val})`}</AppText>
                 </View>
               ))}
             </View>
           </View>
           <View className="flx flex-col flex-1 h-full justify-between">
             <View className="flex flex-col">
-              <Text>File Size </Text>
+              <AppText>File Size </AppText>
               <View className="flex flex-col">
                 {Object.entries(fileSizeCount).map(([key, val]) => (
                   <View className="flex flex-row" key={key}>
@@ -93,12 +93,12 @@ export default function FilterMedia({
                       )}
                       onValueChange={() => toggleFileSize(key as FileSize)}
                     />
-                    <Text>{key}</Text>
-                    <Text>{`(${val})`}</Text>
+                    <AppText>{key}</AppText>
+                    <AppText>{`(${val})`}</AppText>
                   </View>
                 ))}
               </View>
-              <Text>Size Range</Text>
+              <AppText>Size Range</AppText>
               <View className="flex gap-2 items-center">
                 <TextInput
                   placeholder="Min MB"
@@ -116,7 +116,7 @@ export default function FilterMedia({
                   }}
                   className="w-full rounded border px-2 py-1 text-sm text-black bg-white"
                 />
-                <Text>-</Text>
+                <AppText>-</AppText>
                 <TextInput
                   placeholder="Min MB"
                   keyboardType="decimal-pad"
@@ -136,7 +136,7 @@ export default function FilterMedia({
               </View>
             </View>
             <View className="flex flex-col gap-1">
-              <Text className="text-xs font-semibold">Time Range</Text>
+              <AppText className="text-xs font-semibold">Time Range</AppText>
               <View className="flex gap-2 items-center">
                 {/* <input
                   type="date"
@@ -150,7 +150,7 @@ export default function FilterMedia({
                   }}
                   className="w-full rounded border px-2 py-1 text-sm text-black bg-white"
                 />
-                <Text>-</Text>
+                <AppText>-</AppText>
                 <input
                   type="date"
                   value={toDateInputValue(draftFilter.maxCreationDate)}

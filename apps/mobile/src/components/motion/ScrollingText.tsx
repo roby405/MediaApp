@@ -51,16 +51,16 @@ export function ScrollingText({ text, className = "" }: ScrollingTextProps) {
     >
       <Animated.View style={[{ flexDirection: "row" }, animatedStyle]}>
         {/* The Original Text */}
-        <Text
+        <AppText
           className={shouldScroll ? "pr-8" : ""}
           numberOfLines={1}
           onLayout={(e) => setTextWidth(e.nativeEvent.layout.width)}
         >
           {text}
-        </Text>
+        </AppText>
 
         {/* The Duplicate Text (Only renders if scrolling is needed) */}
-        {shouldScroll && <Text className="pr-8">{text}</Text>}
+        {shouldScroll && <AppText className="pr-8">{text}</AppText>}
       </Animated.View>
     </View>
   );

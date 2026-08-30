@@ -11,6 +11,7 @@ import {
 } from "lucide-react-native";
 import { useRef } from "react";
 import { Pressable, Text, View } from "react-native";
+import { AppText } from "./AppText";
 
 export interface NavItem {
   id: Screen;
@@ -46,9 +47,9 @@ function NavButton({ label, icon: Icon, isActive, onPress }: NavButtonProps) {
           isActive ? "-translate-y-6 scale-125" : "translate-y-0 scale-100"
         }`}
       >
-        <Icon className="w-8 h-8" strokeWidth={isActive ? 2.5 : 1.7} />
+        <Icon size={32} color={"#ffffff"} strokeWidth={isActive ? 2.5 : 1.7} />
       </View>
-      <Text className={`text-md ${isActive ? "font-bold" : ""}`}>{label}</Text>
+      <AppText className={`text-md ${isActive ? "font-bold" : ""}`}>{label}</AppText>
     </Pressable>
   );
 }
@@ -95,7 +96,7 @@ function ImportButton({
         onChange={(e) => handleFileChange(e, "folder")}
       /> */}
       <Pressable
-        className="relative flex-1 flex flex-col items-center justify-center"
+        className="relative flex-1 flex flex-col items-center justify-center text-white"
         onPress={onPress}
       >
         <View
@@ -103,9 +104,9 @@ function ImportButton({
             isActive ? "-translate-y-6 scale-125" : "translate-y-0 scale-100"
           }`}
         >
-          <Icon className="w-8 h-8" strokeWidth={isActive ? 2.5 : 1.7} />
+          <Icon size={32} color={"#ffffff"} className="w-8 h-8" strokeWidth={isActive ? 2.5 : 1.7} />
         </View>
-        <Text className="text-md">{label}</Text>
+        <AppText className="text-md">{label}</AppText>
         {isActive && (
           <View className="absolute bottom-full mb-10 bg-secondary flex flex-col w-40 h-26 gap-2 rounded-2xl text-lg">
             <Pressable

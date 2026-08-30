@@ -4,7 +4,7 @@ import ImportScreen from "./ImportScreen";
 import type { MediaType, Screen } from "@media-app/core/types/global";
 
 export function isMediaScreen(screen: Screen): screen is MediaType {
-  return screen in ["audio", "video", "image", "book"]
+  return ["audio", "video", "image", "book"].includes(screen);
 }
 
 export const SCREEN_MAP: Record<Exclude<Screen, MediaType>, ComponentType> = {

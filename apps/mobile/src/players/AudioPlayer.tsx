@@ -164,7 +164,7 @@ export function MiniAudioPlayer() {
             text={file.metadata.title || ""}
             className="text-text"
           />
-          <Text className="text-gray-300 truncate">{file.metadata.artist}</Text>
+          <AppText className="text-gray-300 truncate">{file.metadata.artist}</AppText>
         </View>
       </Pressable>
       <View className="flex align-center flex-col">
@@ -193,7 +193,7 @@ export function ExtendedAudioPlayer() {
             text={file.metadata.title || ""}
             className="text-text"
           />
-          <Text className="text-gray-300 truncate">{file.metadata.artist}</Text>
+          <AppText className="text-gray-300 truncate">{file.metadata.artist}</AppText>
         </View>
       </Pressable>
       <AudioProgressBar />

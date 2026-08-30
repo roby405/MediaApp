@@ -28,12 +28,15 @@ function App() {
   
   if (activeScreen !== screen && deferred === false) setScreen(activeScreen);
 
-  const renderScreen = (screen: Screen) => {
+  const renderScreen = () => {
     if (isMediaScreen(screen))
       return <MediaScreen type={screen} />
     const ScreenComponent = SCREEN_MAP[screen];
     return <ScreenComponent />
   }
+
+
+  const ComponentScreen = renderScreen();
   
   useAudioEngine();
   useVideoEngine();
@@ -47,9 +50,9 @@ function App() {
   // }, []);
 
   return (
-    <View className="w-dvw h-dvh flex flex-col bg-primary">
+    <View className="flex-1 w-full h-full flex flex-col bg-primary text-white">
       <PageContent>
-        {renderScreen(activeScreen)}
+        {ComponentScreen}
       </PageContent>
       {activeMedia && activeMedia.category === "audio" && (
         <>

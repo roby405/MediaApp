@@ -2,9 +2,9 @@ import { Text } from "react-native";
 
 function ImportScreen() {
     return (
-        <Text>
+        <AppText>
             importttt
-        </Text>
+        </AppText>
     );
 };
 

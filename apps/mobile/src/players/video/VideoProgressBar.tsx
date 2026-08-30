@@ -9,7 +9,7 @@ export function TimeViewer() {
   const currentTime = useVideoProgress();
   const {file} = useActiveMedia("video");
   if (!file) return null;
-  return <Text>{`${formatLength(currentTime)}/${formatLength(file.metadata.duration)}`}</Text>
+  return <AppText>{`${formatLength(currentTime)}/${formatLength(file.metadata.duration)}`}</AppText>
 }
 
 export function VideoProgressBar() {

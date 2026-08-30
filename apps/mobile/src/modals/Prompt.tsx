@@ -22,9 +22,9 @@ export default function Prompt({
         className="bg-gray-500 border-gray-400 border flex flex-col rounded-xl p-2 gap-2 pointer-events-auto min-w-[40%] min-h-[30%] text-text"
         onPress={(e) => e.stopPropagation()}
       >
-        <Text className="text-lg">
+        <AppText className="text-lg">
           {promptMessage}
-        </Text>
+        </AppText>
         <View className="flex flex-row px-10 gap-8">
           <Pressable className="flex-1 items-center border-gray-400 border rounded-lg px-3 py-1" onPress={onConfirm}>
             {confirmMessage}

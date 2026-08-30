@@ -6,6 +6,7 @@ import { useState } from "react";
 import Rename from "./Rename";
 import DeleteFile from "./prompts/DeleteFile";
 import { Pressable, Text, View } from "react-native";
+import { AppText } from "src/components/AppText";
 
 interface MediaMenuProps extends BasicModalProps {
   file: MediaFile;
@@ -55,8 +56,11 @@ export default function MediaMenu({ isOpen, onClose, file }: MediaMenuProps) {
             setRenameModalOpen(true);
           }}
         >
-          <PencilIcon className="w-5 h-5" strokeWidth={1.7} />
-          <Text className="text-lg">Rename File</Text>
+          <PencilIcon
+            color={"#e5e7eb"}
+            size={20}
+            strokeWidth={1.7} />
+          <AppText className="text-lg">Rename File</AppText>
         </Pressable>
         {renameModalOpen && (
           <Rename
@@ -76,7 +80,7 @@ export default function MediaMenu({ isOpen, onClose, file }: MediaMenuProps) {
           }}
         >
           <Trash2Icon className="w-5 h-5" strokeWidth={1.7} />
-          <Text className="text-lg">Delete File</Text>
+          <AppText className="text-lg">Delete File</AppText>
         </Pressable>
 
         {deleteModalOpen && (

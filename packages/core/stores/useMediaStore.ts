@@ -7,7 +7,7 @@ import type {
   MediaFile,
   VideoMediaFile,
 } from "../../../apps/web/src/db/schema";
-import { getFilesByCategory, updateFile } from "../../../apps/web/src/db/operations";
+// import { getFilesByCategory, updateFile } from "../../../apps/web/src/db/operations";
 import type { MediaType } from "../types/global";
 import { buildIndex } from "../utils/buildIndex";
 
@@ -36,40 +36,40 @@ export const useMediaStore = create<MediaState>((set, get) => ({
   isLoading: false,
   loadFiles: async (category) => {
     set({ isLoading: true });
-    const files = await getFilesByCategory(category);
-    set((state) => {
-      const newIndex = buildIndex(files, (f: MediaFile) => f.id);
-      return {
-        isLoading: false,
-        mediaFiles: {
-          ...state.mediaFiles,
-          [category]: files,
-        },
-        byId: { ...state.byId, ...newIndex },
-      };
-    });
+    // const files = await getFilesByCategory(category);
+    // set((state) => {
+    //   const newIndex = buildIndex(files, (f: MediaFile) => f.id);
+    //   return {
+    //     isLoading: false,
+    //     mediaFiles: {
+    //       ...state.mediaFiles,
+    //       [category]: files,
+    //     },
+    //     byId: { ...state.byId, ...newIndex },
+    //   };
+    // });
   },
   loadAll: async () => {
     set({ isLoading: true });
-    const [books, audio, videos, images] = await Promise.all([
-      getFilesByCategory("book"),
-      getFilesByCategory("audio"),
-      getFilesByCategory("video"),
-      getFilesByCategory("image"),
-    ]);
+    // const [books, audio, videos, images] = await Promise.all([
+    //   getFilesByCategory("book"),
+    //   getFilesByCategory("audio"),
+    //   getFilesByCategory("video"),
+    //   getFilesByCategory("image"),
+    // ]);
 
-    const allFiles = [...books, ...audio, ...videos, ...images];
+    // const allFiles = [...books, ...audio, ...videos, ...images];
 
-    set({
-      isLoading: false,
-      mediaFiles: {
-        book: books,
-        audio: audio,
-        video: videos,
-        image: images,
-      },
-      byId: buildIndex(allFiles, (f: MediaFile) => f.id),
-    });
+    // set({
+    //   isLoading: false,
+    //   mediaFiles: {
+    //     book: books,
+    //     audio: audio,
+    //     video: videos,
+    //     image: images,
+    //   },
+    //   byId: buildIndex(allFiles, (f: MediaFile) => f.id),
+    // });
   },
 
   toggleFavourite: async (category, id) => {
@@ -96,9 +96,9 @@ export const useMediaStore = create<MediaState>((set, get) => ({
         }
       },
     }));
-    updateFile({
-      ...target,
-      is_favourite: favValue,
-    }).catch((err) => console.error(`Couldn't toggle favourite: ${err}`));
+    // updateFile({
+    //   ...target,
+    //   is_favourite: favValue,
+    // }).catch((err) => console.error(`Couldn't toggle favourite: ${err}`));
   },
 }));

@@ -14,6 +14,7 @@ import { Pressable, View, Text } from "react-native";
 import { useScreenViewStore } from "@media-app/core/stores/useScreenViewStore";
 import { useNavStore } from "@media-app/core/stores/useNavStore";
 import { useActiveMedia } from "@media-app/core/hooks/useActiveMedia";
+import { AppText } from "./AppText";
 
 const ITEMS: Record<string, string> = {
   book: "Books",
@@ -38,12 +39,12 @@ function TopBar() {
 
   const viewMode = viewModes[activeScreen];
   return (
-    <View className="h-12 mb-4 flex flex-row bg-secondary justify-center items-center px-2 rounded-b-sm">
+    <View className="h-12 mb-4 flex flex-row w-full bg-secondary justify-center items-center px-2 rounded-b-sm">
       {!file || file.category === "audio" || file.category === "video" ? (
         <>
-          <Text className="text-2xl text-center font-medium">
+          <AppText className="text-2xl text-center font-medium">
             {ITEMS[activeScreen]}
-          </Text>
+          </AppText>
           <View className="flex flex-row justify-end w-full gap-3">
             <IconButton
               onPress={() => {
@@ -93,12 +94,13 @@ function TopBar() {
       ) : (
         <>
           <Pressable onPress={() => setActiveMedia(null)} className="pointer-events-auto">
-            {<ArrowLeftIcon className="w-7 h-7" strokeWidth={1.7} />}
+            {<ArrowLeftIcon         color={"#e5e7eb"}
+        size={28} strokeWidth={1.7} />}
           </Pressable>
 
-          <Text className="w-full text-center text-xl truncate px-8">
+          <AppText className="w-full text-center text-xl truncate px-8">
             {name}
-          </Text>
+          </AppText>
           <View className="flex flex-row justify-end gap-3">
             <Pressable onPress={() => {}} className="">
               {<EllipsisVertical className="w-7 h-7" strokeWidth={1.7} />}

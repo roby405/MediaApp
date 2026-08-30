@@ -23,7 +23,7 @@ export default function SearchMedia({
   return (
     <Modal isOpen={isOpen} onClose={onClose} isPopup={true}>
       <View className="bg-gray-500 border-gray-400 border rounded-xl min-w-[90%] min-h-[15%] flex flex-col items-center justify-center gap-3 p-3 top-13 absolute left-0 right-0 mx-8">
-        <Text className="text-lg w-full">Search for a file:</Text>
+        <AppText className="text-lg w-full">Search for a file:</AppText>
         <TextInput
           ref={inputRef}
           value={name}

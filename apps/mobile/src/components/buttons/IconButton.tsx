@@ -18,7 +18,9 @@ export function IconButton({
       className={`rounded-full h-10 w-10 flex items-center justify-center ${className}`}
     >
       <Icon
-        className={`w-6 h-6 text-gray-200 ${iconProps?.className ?? ""}`}
+        color={"#e5e7eb"}
+        size={24}
+        className={`${iconProps?.className ?? ""}`}
         strokeWidth={1.4}
         {...iconProps}
       />

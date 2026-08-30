@@ -25,6 +25,7 @@ import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore"
 import { useNavStore } from "@media-app/core/stores/useNavStore";
 import { useMediaStore } from "@media-app/core/stores/useMediaStore";
 import { useActiveMedia } from "@media-app/core/hooks/useActiveMedia";
+import { AppText } from "src/components/AppText";
 
 export function ExpandedVideoControls() {
   const isPlaying = useVideoPlayerStore((state) => state.isPlaying);
@@ -122,7 +123,7 @@ export function ExpandedVideoControls() {
         <View className="flex flex-row justify-between">
           <View className="flex flex-row justify-start gap-5">
             <TimeViewer />
-            <Text>{file.name}</Text>
+            <AppText>{file.name}</AppText>
           </View>
           <View className="flex flex-row justify-end gap-2">
             <View className="relative">

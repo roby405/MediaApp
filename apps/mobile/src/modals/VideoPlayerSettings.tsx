@@ -40,7 +40,7 @@ export function VideoPlaybackMenu({ isOpen, onClose }: BasicModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isPopup={true}>
       <View className="bg-black/50 border border-white top-full mt-10 w-40 h-20 left-1/2 -translate-x-1/2 rounded-xl rounded-tr-3xl flex-col flex items-center justify-center">
-        <Text className="text-2xl">{formatPlaybackSpeed(playback)}</Text>
+        <AppText className="text-2xl">{formatPlaybackSpeed(playback)}</AppText>
         <Slider
           orientation="h"
           length={"40"}
@@ -70,8 +70,8 @@ export function VideoQueueMenu({ isOpen, onClose }: BasicModalProps) {
     <Modal isOpen={isOpen} onClose={onClose} isPopup={true}>
       <View className="absolute bg-black/50 border border-white top-full mt-2 w-100 right-2 rounded-xl rounded-tr-3xl flex-col flex px-2">
         <View className="flex flex-row justify-between px-2">
-          <Text className="text-xl text-left">Play Queue</Text>
-          <Text className="text-lg text-right">{`${index + 1}/${queue.length}`}</Text>
+          <AppText className="text-xl text-left">Play Queue</AppText>
+          <AppText className="text-lg text-right">{`${index + 1}/${queue.length}`}</AppText>
         </View>
         <View className="flex-1 overflow-y-auto min-h-0 max-h-100 no-scrollbar space-y-2">
           {queue.map((id) => {
@@ -94,11 +94,11 @@ export function VideoQueueMenu({ isOpen, onClose }: BasicModalProps) {
                     <View className="h-full aspect-video bg-red" />
                   )}
                   <View className="right-0.5 bottom-1.5 absolute w-fit px-1.5 py-0.5 bg-black/60 rounded-xl">
-                    <Text>{formatLength(video.metadata.duration)}</Text>
+                    <AppText>{formatLength(video.metadata.duration)}</AppText>
                   </View>
                 </View>
                 <View className="flex flex-col text-text min-w-0">
-                  <Text className="text-lg truncate">{video?.name}</Text>
+                  <AppText className="text-lg truncate">{video?.name}</AppText>
 
                 </View>
               </Pressable>

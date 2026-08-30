@@ -19,7 +19,7 @@ export default function Rename({
   return (
     <Modal isOpen={isOpen} onClose={onClose} isPopup={false}>
       <View className="bg-gray-500 border-gray-400 border rounded-xl min-w-[40%] min-h-[30%] flex flex-col items-center justify-center gap-3 p-3">
-        <Text className="text-lg w-full">New Name:</Text>
+        <AppText className="text-lg w-full">New Name:</AppText>
         <TextInput
           ref={inputRef}
           value={name}

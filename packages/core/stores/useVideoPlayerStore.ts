@@ -1,26 +1,22 @@
 import { create } from "zustand";
-// import { Timer } from "../../../apps/mobile/src/utils/Timer";
-import { MediaController } from "../interfaces/MediaController";
+import { Registry } from "../interfaces/Registry";
 
 // const controlsTimer = new Timer();
 
-interface VideoController extends MediaController {
-  // nothing you can do about it
-  videoEngine: any
-}
+const video = Registry.video;
 
 interface VideoPlayerState {
   volume: number;
   playbackSpeed: number;
   isPlaying: boolean;
-  videoRef: VideoController | null;
+  videoRef: any | null;
   isExpanded: boolean;
   controlsVisible: boolean;
   activeMenu: VideoMenuType;
   setActiveMenu: (val: VideoMenuType) => void;
   setControlsVisible: (val: boolean) => void;
   setExpanded: (val: boolean) => void;
-  setVideoRef: (videoRef: VideoController | null) => void;
+  setVideoRef: (videoRef: any | null) => void;
   setVolume: (val: number) => void;
   setPlaying: (val: boolean) => void;
   setPlaybackSpeed: (val: number) => void;

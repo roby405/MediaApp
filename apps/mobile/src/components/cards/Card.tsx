@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
-import type { AudioMediaFile, MediaFile } from "../../db/schema";
 import { MediaMenuButton } from "../buttons/MediaMenuButton";
 import { Image, Pressable, View } from "react-native";
 import { MediaType } from "@media-app/core/types/global";
+import { MediaFile } from "@media-app/core/types/db";
 
 interface CardProps {
   file: MediaFile;

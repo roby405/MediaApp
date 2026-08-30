@@ -1,8 +1,8 @@
 import MediaMenu from "../../modals/MediaMenu";
 import { EllipsisVerticalIcon } from "lucide-react-native";
 import { IconButton } from "./IconButton";
-import type { MediaFile } from "../../db/schema";
 import { useState } from "react";
+import { MediaFile } from "@media-app/core/types/db";
 
 type MediaMenuButtonProps = {
   file: MediaFile;

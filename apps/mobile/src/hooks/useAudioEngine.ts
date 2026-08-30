@@ -1,3 +1,4 @@
+import { Registry } from "@media-app/core/interfaces/Registry";
 import { useAudioPlayerStore } from "@media-app/core/stores/useAudioPlayerStore";
 import { useNavStore } from "@media-app/core/stores/useNavStore";
 import { useEffect, useRef } from "react";
@@ -13,7 +14,6 @@ export function useAudioEngine() {
 
   const goToNext = useNavStore((state) => state.goToNextMedia);
   const goToPrev = useNavStore((state) => state.goToPreviousMedia);
-  const setAudioRef = useAudioPlayerStore((state) => state.setAudioRef);
   const setPlaying = useAudioPlayerStore((state) => state.setPlaying);
 
   useEffect(() => {
@@ -41,14 +41,14 @@ export function useAudioEngine() {
           ],
         });
         setupDone.current = true;
-        setAudioRef({
+        Registry.registerAudio({
           play: () => TrackPlayer.play(),
           pause: () => TrackPlayer.pause(),
           seek: (val: number) => TrackPlayer.seekTo(val),
           getCurrentTime: async () => {
             const progress = await TrackPlayer.getProgress();
             return progress.position;
-          }
+          },
         });
       } catch (error) {
         setupDone.current = true;
@@ -56,12 +56,17 @@ export function useAudioEngine() {
     }
 
     setup();
-
-    return () => setAudioRef(null);
-  }, [setAudioRef]);
+  }, []);
 
   useTrackPlayerEvents(
-    [Event.RemotePlay, Event.RemoteNext, Event.RemotePrevious, Event.RemotePause, Event.PlaybackQueueEnded], (event) => {
+    [
+      Event.RemotePlay,
+      Event.RemoteNext,
+      Event.RemotePrevious,
+      Event.RemotePause,
+      Event.PlaybackQueueEnded,
+    ],
+    (event) => {
       switch (event.type) {
         case Event.RemotePlay: {
           TrackPlayer.play();
@@ -83,8 +88,6 @@ export function useAudioEngine() {
           break;
         }
       }
-    }
+    },
   );
-
-
 }

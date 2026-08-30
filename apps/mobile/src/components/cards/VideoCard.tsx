@@ -1,7 +1,8 @@
-import type { VideoMediaFile } from "../../db/schema";
-import { formatSize } from "../../../../../packages/core/utils/formatSize";
+
+import { VideoMediaFile } from "@media-app/core/types/db";
 import Card, { BasicCardProps } from "./Card";
 import { formatLength } from "@media-app/core/utils/formatLength";
+import { formatSize } from "@media-app/core/utils/formatSize";
 
 type VideoCardProps = BasicCardProps & {
   file: VideoMediaFile

@@ -10,11 +10,13 @@ import { FloatingComponent } from "./components/motion/FloatingComponent";
 import { FloatingResizableComponent } from "./components/motion/FloatingResizableComponent";
 import { ExpandedVideoPlayer, MiniVideoPlayer } from "./players/VideoPlayer";
 import { useVideoPlayerStore } from "../../../packages/core/stores/useVideoPlayerStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { MediaScreen } from "./screens/MediaScreen";
 import { useAudioEngine } from "./hooks/useAudioEngine";
 import { useVideoEngine } from "./hooks/useVideoEngine";
+import { Registry } from "@media-app/core/interfaces/Registry";
+import { useDB } from "./hooks/useDB";
 
 function App() {
   const activeScreen = useNavStore((state) => state.activeScreen);
@@ -35,9 +37,10 @@ function App() {
     return <ScreenComponent />
   }
 
-
   const ComponentScreen = renderScreen();
+
   
+  useDB();
   useAudioEngine();
   useVideoEngine();
   // useEffect(() => {
@@ -67,7 +70,7 @@ function App() {
             <ExpandedVideoPlayer />
           ) : (
             // make it fullscreen somehow
-            <FloatingResizableComponent lockAspectRatio={true}>
+            <FloatingResizableComponent>
               <MiniVideoPlayer />
             </FloatingResizableComponent>
           )}

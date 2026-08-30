@@ -4,6 +4,7 @@ import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore"
 import { useNavStore } from "@media-app/core/stores/useNavStore";
 import { useActiveMedia } from "@media-app/core/hooks/useActiveMedia";
 import { getMediaUrl } from "src/utils/getMediaUrl";
+import { Registry } from "@media-app/core/interfaces/Registry";
 
 export function useVideoEngine() {
   const isPlaying = useVideoPlayerStore((state) => state.isPlaying);
@@ -30,9 +31,8 @@ export function useVideoEngine() {
   useEffect(() => {
     if (!url || !player) return;
     player.replace(url);
-    if (isPlaying)
-      player.play();
-  }, [player, url])
+    if (isPlaying) player.play();
+  }, [player, url]);
 
   useEffect(() => {
     if (!player) return;
@@ -82,15 +82,15 @@ export function useVideoEngine() {
       return;
     }
 
-    setVideoRef({
+    Registry.registerVideo({
       play: player.play,
       pause: player.pause,
-      seek: (val) => {
+      seek: (val: number) => {
         player.currentTime = val;
       },
       getCurrentTime: () => player.currentTime,
-      videoEngine: player,
     });
+    setVideoRef(player);
 
     return () => setVideoRef(null);
   }, [player, setVideoRef]);

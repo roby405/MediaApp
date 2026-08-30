@@ -1,44 +1,6 @@
 import type { DBSchema } from "idb";
-import type { MediaType } from "../../../../packages/core/types/global";
-import type { AudioMetadata, BookMetadata, ImageMetadata, VideoMetadata } from "../../../../packages/core/types/db";
-
-export interface BaseMediaFile {
-  id: string; // sha256
-  name: string;
-  extension: string;
-  path: string;
-  size: number;
-  created_at: number; //unix time
-  cover: Blob | null;
-  last_opened_at: number;
-  is_favourite: number;
-}
-
-export type AudioMediaFile = BaseMediaFile & {
-  category: "audio";
-  metadata: AudioMetadata;
-};
-
-export type VideoMediaFile = BaseMediaFile & {
-  category: "video";
-  metadata: VideoMetadata;
-};
-
-export type ImageMediaFile = BaseMediaFile & {
-  category: "image";
-  metadata: ImageMetadata;
-};
-
-export type BookMediaFile = BaseMediaFile & {
-  category: "book";
-  metadata: BookMetadata;
-};
-
-export type MediaFile =
-  | AudioMediaFile
-  | VideoMediaFile
-  | ImageMediaFile
-  | BookMediaFile;
+import type { MediaFile } from "@media-app/core/types/db";
+import type { MediaType } from "@media-app/core/types/global";
 
 export interface AppDB extends DBSchema {
   files: {

@@ -2,7 +2,7 @@ import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore"
 import { useEffect, useState } from "react";
 
 export function useVideoProgress() {
-  const player = useVideoPlayerStore((state) => state.videoRef?.videoEngine);
+  const player = useVideoPlayerStore((state) => state.videoRef);
   const [currentTime, setCurrentTime] = useState<number>(player?.currentTime ?? 0);
 
   useEffect(() => {

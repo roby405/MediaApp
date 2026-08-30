@@ -1,7 +1,7 @@
-import { formatDate } from "../../../../../packages/core/utils/formatDate";
-import { formatSize } from "../../../../../packages/core/utils/formatSize";
 import Card, { BasicCardProps } from "./Card";
-import { ImageMediaFile } from "../../db/schema";
+import { formatSize } from "@media-app/core/utils/formatSize";
+import { formatDate } from "@media-app/core/utils/formatDate";
+import { ImageMediaFile } from "@media-app/core/types/db";
 
 type ImageCardProps = BasicCardProps & {
   file: ImageMediaFile

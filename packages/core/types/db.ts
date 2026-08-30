@@ -38,3 +38,43 @@ export type Metadata =
   | VideoMetadata
   | BookMetadata
   | AudioMetadata;
+
+
+  
+export interface BaseMediaFile {
+  id: string; // sha256
+  name: string;
+  extension: string;
+  path: string;
+  size: number;
+  created_at: number; //unix time
+  cover: string | null;
+  last_opened_at: number;
+  is_favourite: number;
+}
+
+export type AudioMediaFile = BaseMediaFile & {
+  category: "audio";
+  metadata: AudioMetadata;
+};
+
+export type VideoMediaFile = BaseMediaFile & {
+  category: "video";
+  metadata: VideoMetadata;
+};
+
+export type ImageMediaFile = BaseMediaFile & {
+  category: "image";
+  metadata: ImageMetadata;
+};
+
+export type BookMediaFile = BaseMediaFile & {
+  category: "book";
+  metadata: BookMetadata;
+};
+
+export type MediaFile =
+  | AudioMediaFile
+  | VideoMediaFile
+  | ImageMediaFile
+  | BookMediaFile;

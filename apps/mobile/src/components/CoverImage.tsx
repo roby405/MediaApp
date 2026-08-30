@@ -1,7 +1,7 @@
 import { Image } from "react-native";
-import type { MediaFile } from "../db/schema";
 import { getCoverUrl } from "../utils/getMediaUrl";
 import { View } from "lucide-react-native";
+import { MediaFile } from "@media-app/core/types/db";
 
 interface CoverImageProps {
   file: MediaFile;
@@ -9,12 +9,11 @@ interface CoverImageProps {
 }
 
 export function CoverImage({ file, className = "" }: CoverImageProps) {
-  const hasCover = file.cover !== null;
-  if (hasCover)
+  if (file.cover)
     return (
       <Image
         className={`aspect-square rounded-sm pointer-events-none shrink-0 ${className}`}
-        source={{uri: getCoverUrl(file.id)}}
+        source={{uri: file.cover}}
       />
     );
   else

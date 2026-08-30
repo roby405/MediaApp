@@ -39,13 +39,13 @@ function TopBar() {
 
   const viewMode = viewModes[activeScreen];
   return (
-    <View className="h-12 mb-4 flex flex-row w-full bg-secondary justify-center items-center px-2 rounded-b-sm">
+    <View className="h-12 mb-4 flex flex-row w-full bg-secondary justify-between items-center px-2 rounded-b-sm">
       {!file || file.category === "audio" || file.category === "video" ? (
         <>
-          <AppText className="text-2xl text-center font-medium">
+          <AppText className="text-2xl text-left font-medium">
             {ITEMS[activeScreen]}
           </AppText>
-          <View className="flex flex-row justify-end w-full gap-3">
+          <View className="flex flex-row gap-3">
             <IconButton
               onPress={() => {
                 if (viewMode === "grid") {

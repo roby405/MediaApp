@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Modal, type BasicModalProps } from "./Modal";
 import { Pressable, Text, TextInput, View } from "react-native";
+import { AppText } from "src/components/AppText";
 
 interface RenameProps extends BasicModalProps {
   originalName: string;

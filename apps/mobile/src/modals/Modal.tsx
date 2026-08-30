@@ -38,22 +38,27 @@ export function Modal({
   if (!isOpen) return null;
 
   return isPopup ? (
-    <>
+    <RNModal
+      visible={isOpen}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+    >
       <Pressable
-        className="fixed inset-0 z-40 bg-transparent pointer-events-auto"
+        className="flex-1 w-full h-full pointer-events-auto"
         onPress={(e) => {
           e.stopPropagation();
           onClose();
         }}
-      />
-
-      <Pressable
-        className="z-50 absolute inset-0 pointer-events-none"
-        onPress={(e) => e.stopPropagation()}
       >
-        <View className="pointer-events-auto">{children}</View>
+        <Pressable
+          className="pointer-events-auto"
+          onPress={(e) => e.stopPropagation()}
+        >
+          {children}
+        </Pressable>
       </Pressable>
-    </>
+    </RNModal>
   ) : (
     <RNModal
       visible={isOpen}

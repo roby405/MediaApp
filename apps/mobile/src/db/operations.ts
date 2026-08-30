@@ -1,76 +1,145 @@
-// import { getDB } from ".";
-import type { MediaType } from "../../../../packages/core/types/global";
-import type { MediaFile } from "./schema";
+import { getMediaUrl } from "src/utils/getMediaUrl";
+import { db } from ".";
+import * as FileSystem from "expo-file-system";
+import { MediaFile } from "@media-app/core/types/db";
+import { MediaType } from "@media-app/core/types/global";
 
-async function getOpfsRoot() {
-  return await navigator.storage.getDirectory();
+export const MEDIA_DIR = `${FileSystem.documentDirectory}media/`;
+export const SETTINGS_DIR = `${FileSystem.documentDirectory}settings/`;
+export const COVER_DIR = `${FileSystem.documentDirectory}cover/`;
+
+export async function makeSureDirsExist() {
+  const dirInfo = await FileSystem.getInfoAsync(MEDIA_DIR);
+  if (!dirInfo.exists) {
+    await FileSystem.makeDirectoryAsync(MEDIA_DIR, { intermediates: true });
+  }
+
+  const dirInfo2 = await FileSystem.getInfoAsync(SETTINGS_DIR);
+  if (!dirInfo2.exists) {
+    await FileSystem.makeDirectoryAsync(SETTINGS_DIR, { intermediates: true });
+  }
+  const dirInfo3 = await FileSystem.getInfoAsync(COVER_DIR);
+  if (!dirInfo3.exists) {
+    await FileSystem.makeDirectoryAsync(COVER_DIR, { intermediates: true });
+  }
 }
 
-// export async function saveFile(file: MediaFile, rawFile: File) {
-//   const root = await getOpfsRoot();
-//   const fileHandle = await root.getFileHandle(file.id, { create: true });
-//   const writable = await fileHandle.createWritable();
-//   await writable.write(rawFile);
-//   await writable.close();
-  
-//   // const db = await getDB();
-//   return db.add("files", file);
-// }
+function parseMedia(row: any): MediaFile {
+  return {
+    ...row,
+    metadata: JSON.parse(row.metadata),
+  };
+}
 
-// export async function updateFile(file: MediaFile) {
-//   // const db = await getDB();
-//   return db.put("files", file);
-// }
+export async function saveFile(
+  file: MediaFile,
+  source: string,
+  coverSource = "",
+) {
+  await makeSureDirsExist();
+  const coverDest = `${COVER_DIR}${file.id}.webp`;
+  await FileSystem.copyAsync({
+    from: source,
+    to: file.path,
+  });
 
-// export async function getFileContent(id: string) {
-//   try {
-//     const root = await getOpfsRoot();
-//     const fileHandle = await root.getFileHandle(id);
-//     return await fileHandle.getFile();
-//   } catch (err) {
-//     console.error(`Couldn't get the file with id ${id}: ${err}`);
-//     return null;
-//   }
-// }
+  if (file.cover && coverSource) {
+    await FileSystem.copyAsync({
+      from: coverSource,
+      to: coverDest,
+    });
+  }
 
-// export async function getFile(id: string) {
-//   const db = await getDB();
-//   return db.get("files", id);
-// }
+  const dbFormat = db.prepareSync(`INSERT OR REPLACE INTO files 
+    (id, name, extension, path, size, created_at, cover, last_opened_at, is_favourite, category, metadata) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
 
-// export async function renameFile(id: string, newName: string) {
-//   const file = await getFile(id);
-//   if (file) {
-//     file.name = newName;
-//     await updateFile(file);
-//   }
-// }
+  dbFormat.executeSync([
+    file.id,
+    file.name,
+    file.extension,
+    file.path,
+    file.size,
+    file.created_at,
+    file.cover,
+    file.last_opened_at,
+    file.is_favourite,
+    file.category,
+    JSON.stringify(file.metadata),
+  ]);
+}
 
-// export async function getAllFiles() {
-//   const db = await getDB();
-//   return db.getAll("files");
-// }
+export async function updateFile(file: MediaFile) {
+  // const db = await getDB();
+  const dbFormat = db.prepareSync(`UPDATE files SET
+    name = ?, extension = ?, path = ?, size = ?, created_at = ?, cover = ?, last_opened_at = ?, is_favourite = ?, category = ?, metadata = ?
+    WHERE id = ?
+    `);
 
-// export async function getFilesByCategory<T extends MediaType>(
-//   category: T,
-// ): Promise<Extract<MediaFile, { category: T }>[]> {
-//   const db = await getDB();
-//   const files = (await db.getAllFromIndex(
-//     "files",
-//     "by_category",
-//     category,
-//   )) as Extract<MediaFile, { category: T }>[];
-//   return files;
-// }
+  dbFormat.executeSync([
+    file.name,
+    file.extension,
+    file.path,
+    file.size,
+    file.created_at,
+    file.cover,
+    file.last_opened_at,
+    file.is_favourite,
+    file.category,
+    JSON.stringify(file.metadata),
+    file.id,
+  ]);
+}
 
-// export async function deleteFile(id: string) {
-//   try {
-//     const root = await getOpfsRoot();
-//     await root.removeEntry(id);
-//   } catch (error) {
-//     console.warn(`File ${id} not found in OPFS or already deleted.`, error);
-//   }
+// CHANGED: Made async to match Web
+export async function getFile(id: string): Promise<MediaFile | null> {
+  const row = db.getFirstAsync(`SELECT * FROM files WHERE id = ?`, id);
+  return row ? parseMedia(row) : null;
+}
 
-//   const db = await getDB();
-//   return db.delete("files", id);
-// }
+export function getFileSync(id: string): MediaFile | null {
+  const row = db.getFirstSync(`SELECT * FROM files WHERE id = ?`, id);
+  return row ? parseMedia(row) : null;
+}
+
+export async function getFileContent(id: string) {
+  const uri = getMediaUrl(id);
+  if (!uri) return null;
+
+  const res = await fetch(uri);
+  return await res.arrayBuffer();
+}
+
+export async function renameFile(id: string, newName: string) {
+  const dbFormat = db.prepareSync(`UPDATE files SET name = ? WHERE id = ?`);
+  dbFormat.executeSync([newName, id]);
+}
+
+// CHANGED: Made async to match Web
+export async function getAllFiles(): Promise<MediaFile[]> {
+  return db.getAllSync("SELECT * FROM files").map(parseMedia);
+}
+
+// CHANGED: Made async to match Web
+export async function getFilesByCategory<T extends MediaType>(
+  category: T,
+): Promise<Extract<MediaFile, { category: T }>[]> {
+  const rows = db.getAllSync('SELECT * FROM files WHERE category = ?', category);
+  return rows.map(parseMedia) as Extract<MediaFile, { category: T }>[];
+}
+
+export async function deleteFile(id: string) {
+  const file = await getFile(id);
+
+  if (file && file.path) {
+    try {
+      await FileSystem.deleteAsync(file.path, { idempotent: true });
+    } catch (err) {
+      console.error(`Couldn't delete file: ${err}`);
+    }
+  }
+
+  const dbFormat = db.prepareAsync(`DELETE FROM files WHERE id = ?`);
+  (await dbFormat).executeAsync(id);
+}

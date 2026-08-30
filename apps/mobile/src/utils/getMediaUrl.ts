@@ -1,7 +1,9 @@
+import { getFileSync } from "src/db/operations";
+
 export function getMediaUrl(id: string) {
-  return `/opfs-media/${id}`
+  return getFileSync(id)?.path ?? null;
 }
 
 export function getCoverUrl(id: string) {
-  return `/db/cover/${id}`
+  return getFileSync(id)?.cover ?? null;
 }

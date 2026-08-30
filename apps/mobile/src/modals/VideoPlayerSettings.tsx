@@ -7,6 +7,7 @@ import { formatPlaybackSpeed } from "@media-app/core/utils/formatPlaybackSpeed";
 import { useNavStore } from "@media-app/core/stores/useNavStore";
 import { useMediaStore } from "@media-app/core/stores/useMediaStore";
 import { formatLength } from "@media-app/core/utils/formatLength";
+import { AppText } from "src/components/AppText";
 
 export function VideoVolumeMenu({ isOpen, onClose }: BasicModalProps) {
   const volume = useVideoPlayerStore((state) => state.volume);
@@ -87,7 +88,7 @@ export function VideoQueueMenu({ isOpen, onClose }: BasicModalProps) {
                 <View className="rounded-lg relative pointer-events-none">
                   {video?.cover ? (
                     <Image
-                      source={{uri: getCoverUrl(id)}}
+                      source={{uri: video.cover}}
                       className="h-full aspect-square object-cover"
                     />
                   ) : (

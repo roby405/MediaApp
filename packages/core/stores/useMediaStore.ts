@@ -1,15 +1,12 @@
 import { create } from "zustand";
 
-import type {
-  AudioMediaFile,
-  BookMediaFile,
-  ImageMediaFile,
-  MediaFile,
-  VideoMediaFile,
-} from "../../../apps/web/src/db/schema";
 // import { getFilesByCategory, updateFile } from "../../../apps/web/src/db/operations";
 import type { MediaType } from "../types/global";
+import { AudioMediaFile, BookMediaFile, ImageMediaFile, MediaFile, VideoMediaFile } from "../types/db";
 import { buildIndex } from "../utils/buildIndex";
+import { Registry } from "../interfaces/Registry";
+
+const db = Registry.db;
 
 interface MediaState {
   mediaFiles: {
@@ -36,40 +33,40 @@ export const useMediaStore = create<MediaState>((set, get) => ({
   isLoading: false,
   loadFiles: async (category) => {
     set({ isLoading: true });
-    // const files = await getFilesByCategory(category);
-    // set((state) => {
-    //   const newIndex = buildIndex(files, (f: MediaFile) => f.id);
-    //   return {
-    //     isLoading: false,
-    //     mediaFiles: {
-    //       ...state.mediaFiles,
-    //       [category]: files,
-    //     },
-    //     byId: { ...state.byId, ...newIndex },
-    //   };
-    // });
+    const files = await db.getFilesByCategory(category);
+    set((state) => {
+      const newIndex = buildIndex(files, (f: MediaFile) => f.id);
+      return {
+        isLoading: false,
+        mediaFiles: {
+          ...state.mediaFiles,
+          [category]: files,
+        },
+        byId: { ...state.byId, ...newIndex },
+      };
+    });
   },
   loadAll: async () => {
     set({ isLoading: true });
-    // const [books, audio, videos, images] = await Promise.all([
-    //   getFilesByCategory("book"),
-    //   getFilesByCategory("audio"),
-    //   getFilesByCategory("video"),
-    //   getFilesByCategory("image"),
-    // ]);
+    const [books, audio, videos, images] = await Promise.all([
+      db.getFilesByCategory("book"),
+      db.getFilesByCategory("audio"),
+      db.getFilesByCategory("video"),
+      db.getFilesByCategory("image"),
+    ]);
 
-    // const allFiles = [...books, ...audio, ...videos, ...images];
+    const allFiles = [...books, ...audio, ...videos, ...images];
 
-    // set({
-    //   isLoading: false,
-    //   mediaFiles: {
-    //     book: books,
-    //     audio: audio,
-    //     video: videos,
-    //     image: images,
-    //   },
-    //   byId: buildIndex(allFiles, (f: MediaFile) => f.id),
-    // });
+    set({
+      isLoading: false,
+      mediaFiles: {
+        book: books,
+        audio: audio,
+        video: videos,
+        image: images,
+      },
+      byId: buildIndex(allFiles, (f: MediaFile) => f.id),
+    });
   },
 
   toggleFavourite: async (category, id) => {
@@ -96,9 +93,9 @@ export const useMediaStore = create<MediaState>((set, get) => ({
         }
       },
     }));
-    // updateFile({
-    //   ...target,
-    //   is_favourite: favValue,
-    // }).catch((err) => console.error(`Couldn't toggle favourite: ${err}`));
+    await db.updateFile({
+      ...target,
+      is_favourite: favValue,
+    }).catch((err) => console.error(`Couldn't toggle favourite: ${err}`));
   },
 }));

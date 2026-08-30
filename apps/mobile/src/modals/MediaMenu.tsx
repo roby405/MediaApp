@@ -1,12 +1,12 @@
 import { PencilIcon, Trash2Icon } from "lucide-react-native";
 import { Modal, type BasicModalProps } from "./Modal";
-import type { MediaFile } from "../db/schema";
 import { useState } from "react";
 // import { deleteFile, renameFile } from "../db/operations";
 import Rename from "./Rename";
 import DeleteFile from "./prompts/DeleteFile";
 import { Pressable, Text, View } from "react-native";
 import { AppText } from "src/components/AppText";
+import { MediaFile } from "@media-app/core/types/db";
 
 interface MediaMenuProps extends BasicModalProps {
   file: MediaFile;
@@ -45,7 +45,7 @@ export default function MediaMenu({ isOpen, onClose, file }: MediaMenuProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isPopup={true}>
       <Pressable
-        className="absolute right-13 top-3 bg-gray-700 border-gray-400 border flex flex-col rounded-xl p-2 gap-2 pointer-events-auto"
+        className="mr-14 mt-3 bg-gray-700 border-gray-400 border flex flex-col rounded-xl p-2 gap-2 pointer-events-auto"
         onPress={(e) => e.stopPropagation()}
       >
         <Pressable

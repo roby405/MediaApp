@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 import { Modal, type BasicModalProps } from "./Modal";
+import { AppText } from "src/components/AppText";
 
 export interface PromptProps extends BasicModalProps {
   onConfirm: () => void;

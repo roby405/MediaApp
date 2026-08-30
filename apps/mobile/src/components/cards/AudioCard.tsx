@@ -1,6 +1,7 @@
-import type { AudioMediaFile } from "../../db/schema";
+
 import { formatLength } from "@media-app/core/utils/formatLength";
 import Card, { BasicCardProps } from "./Card";
+import { AudioMediaFile } from "@media-app/core/types/db";
 
 type AudioCardProps = BasicCardProps & {
   file: AudioMediaFile

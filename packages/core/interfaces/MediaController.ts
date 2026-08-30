@@ -4,4 +4,3 @@ export interface MediaController {
   seek: (val: number) => Promise<void> | void;
   getCurrentTime: () => Promise<number> | number;
 }
-

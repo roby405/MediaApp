@@ -3,6 +3,7 @@ import { Modal, type BasicModalProps } from "./Modal";
 import type { MediaType } from "@media-app/core/types/global";
 import { Text, TextInput, View } from "react-native";
 import { useFilterStore } from "@media-app/core/stores/useFilterStore";
+import { AppText } from "src/components/AppText";
 
 interface SearchProps extends BasicModalProps {
   category: MediaType;
@@ -22,7 +23,7 @@ export default function SearchMedia({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isPopup={true}>
-      <View className="bg-gray-500 border-gray-400 border rounded-xl min-w-[90%] min-h-[15%] flex flex-col items-center justify-center gap-3 p-3 top-13 absolute left-0 right-0 mx-8">
+      <View className="bg-gray-500 border-gray-400 border rounded-xl min-w-[90%] min-h-[15%] flex flex-col items-center justify-center gap-3 p-3 mt-14 mx-8">
         <AppText className="text-lg w-full">Search for a file:</AppText>
         <TextInput
           ref={inputRef}

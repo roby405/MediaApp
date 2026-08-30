@@ -10,6 +10,7 @@ import { Pressable, Switch, Text, TextInput, View } from "react-native";
 import { useMediaStore } from "@media-app/core/stores/useMediaStore";
 import { useFilterStore } from "@media-app/core/stores/useFilterStore";
 import { FileSize } from "@media-app/core/types/filter";
+import { AppText } from "src/components/AppText";
 
 interface FilterProps extends BasicModalProps {
   category: MediaType;
@@ -64,7 +65,7 @@ export default function FilterMedia({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isPopup={true}>
-      <View className="absolute bg-gray-500 top-13 left-0 right-0 min-w-[80%] min-h-[30%] mx-5 rounded-xl border border-gray-400 flex flex-col">
+      <View className="bg-gray-500 my-14 min-w-[80%] min-h-[40%] mx-5 rounded-xl border border-gray-400 flex flex-col">
         <View className="flex-1 flex flex-row">
           <View className="flex flex-col flex-1 h-full">
             <AppText>Extensions</AppText>
@@ -81,7 +82,7 @@ export default function FilterMedia({
               ))}
             </View>
           </View>
-          <View className="flx flex-col flex-1 h-full justify-between">
+          <View className="flex flex-col flex-1 h-full justify-between">
             <View className="flex flex-col">
               <AppText>File Size </AppText>
               <View className="flex flex-col">
@@ -178,13 +179,13 @@ export default function FilterMedia({
               onClose();
             }}
           >
-            Apply Filters
+            <AppText>Apply Filters</AppText>
           </Pressable>
           <Pressable
             className="rounded-xl border border-gray-400"
             onPress={onClose}
           >
-            Cancel
+            <AppText>Cancel</AppText>
           </Pressable>
         </View>
       </View>

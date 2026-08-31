@@ -40,17 +40,11 @@ function App() {
   const ComponentScreen = renderScreen();
 
   
-  useDB();
+  const dbReady = useDB();
   useAudioEngine();
   useVideoEngine();
-  // useEffect(() => {
-  //   if ("serviceWorker" in navigator) {
-  //     navigator.serviceWorker
-  //       .register("/mediaStreamer.js")
-  //       .then((reg) => console.log(`OPFS worker registered: ${reg}`))
-  //       .catch((err) => console.error(`Registration failed: ${err}`));
-  //   }
-  // }, []);
+
+  if (!dbReady) return <View className="bg-black w-full h-full" />
 
   return (
     <View className="flex-1 w-full h-full flex flex-col bg-primary text-white">

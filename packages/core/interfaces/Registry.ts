@@ -1,4 +1,3 @@
-// packages/core/registers/Registry.ts
 import { DBController } from "../interfaces/DBController";
 import { ImportController } from "../interfaces/ImportController";
 import { MediaController } from "./MediaController";
@@ -46,12 +45,12 @@ class CoreRegistry {
   }
 
   get video(): MediaController {
-    if (!this._video) throw new Error("MediaController was not registered");
+    if (!this._video) throw new Error("VideoController was not registered");
     return this._video;
   }
 
   get audio(): MediaController {
-    if (!this._audio) throw new Error("MediaController was not registered");
+    if (!this._audio) throw new Error("AudioController was not registered");
     return this._audio;
   }
 }

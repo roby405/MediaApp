@@ -6,8 +6,6 @@ import { AudioMediaFile, BookMediaFile, ImageMediaFile, MediaFile, VideoMediaFil
 import { buildIndex } from "../utils/buildIndex";
 import { Registry } from "../interfaces/Registry";
 
-const db = Registry.db;
-
 interface MediaState {
   mediaFiles: {
     audio: AudioMediaFile[];
@@ -33,6 +31,7 @@ export const useMediaStore = create<MediaState>((set, get) => ({
   isLoading: false,
   loadFiles: async (category) => {
     set({ isLoading: true });
+    const db = Registry.db;
     const files = await db.getFilesByCategory(category);
     set((state) => {
       const newIndex = buildIndex(files, (f: MediaFile) => f.id);
@@ -48,6 +47,7 @@ export const useMediaStore = create<MediaState>((set, get) => ({
   },
   loadAll: async () => {
     set({ isLoading: true });
+    const db = Registry.db;
     const [books, audio, videos, images] = await Promise.all([
       db.getFilesByCategory("book"),
       db.getFilesByCategory("audio"),
@@ -93,6 +93,7 @@ export const useMediaStore = create<MediaState>((set, get) => ({
         }
       },
     }));
+    const db = Registry.db;
     await db.updateFile({
       ...target,
       is_favourite: favValue,

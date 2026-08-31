@@ -1,6 +1,7 @@
 import { useImportStore } from "@media-app/core/stores/useImportStore";
 import { useNavStore } from "@media-app/core/stores/useNavStore";
-import type { Screen } from "@media-app/core/types/global"
+import type { Screen } from "@media-app/core/types/global";
+import * as DocumentPicker from "expo-document-picker";
 import {
   BookOpen,
   Images,
@@ -49,7 +50,9 @@ function NavButton({ label, icon: Icon, isActive, onPress }: NavButtonProps) {
       >
         <Icon size={32} color={"#ffffff"} strokeWidth={isActive ? 2.5 : 1.7} />
       </View>
-      <AppText className={`text-md ${isActive ? "font-bold" : ""}`}>{label}</AppText>
+      <AppText className={`text-md ${isActive ? "font-bold" : ""}`}>
+        {label}
+      </AppText>
     </Pressable>
   );
 }
@@ -66,35 +69,31 @@ function ImportButton({
   const folderInputRef = useRef<HTMLInputElement>(null);
   const setDeferred = useNavStore((state) => state.setDeferred);
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    importType: "files" | "folder",
-  ) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-    const fileArray = Array.from(files);
-    startImporting(fileArray, importType);
-    e.target.value = "";
-    setDeferred(false);
-  };
+  const handleImportFiles = async () => {
+    try {
+      const res = await DocumentPicker.getDocumentAsync({
+        type: "*/*",
+        multiple: true,
+        copyToCacheDirectory: false
+      });
+
+      if (!res.canceled && res.assets.length > 0)
+        await startImporting(res.assets
+    } catch (error) {
+      console.error("Couldn't import files", error);
+    }
+  }
+
+  const handleImportFolder = async () => {
+    try {
+      
+    } catch (error) {
+      console.error("Couldn't import folder", error);
+    }
+  }
 
   return (
     <>
-      {/* <input
-        type="file"
-        ref={filesInputRef}
-        multiple
-        className="hidden"
-        onChange={(e) => handleFileChange(e, "files")}
-      />
-      <input
-        type="file"
-        ref={folderInputRef}
-        // @ts-expect-error its just way to pick directory
-        webkitdirectory=""
-        className="hidden"
-        onChange={(e) => handleFileChange(e, "folder")}
-      /> */}
       <Pressable
         className="relative flex-1 flex flex-col items-center justify-center text-white"
         onPress={onPress}
@@ -104,7 +103,12 @@ function ImportButton({
             isActive ? "-translate-y-6 scale-125" : "translate-y-0 scale-100"
           }`}
         >
-          <Icon size={32} color={"#ffffff"} className="w-8 h-8" strokeWidth={isActive ? 2.5 : 1.7} />
+          <Icon
+            size={32}
+            color={"#ffffff"}
+            className="w-8 h-8"
+            strokeWidth={isActive ? 2.5 : 1.7}
+          />
         </View>
         <AppText className="text-md">{label}</AppText>
         {isActive && (
@@ -113,13 +117,13 @@ function ImportButton({
               className="flex-1"
               onPress={() => filesInputRef.current?.click()}
             >
-              Import Files
+              <AppText>Import Files</AppText>
             </Pressable>
             <Pressable
               className="flex-1"
               onPress={() => folderInputRef.current?.click()}
             >
-              Import a Folder
+              <AppText>Import a Folder</AppText>
             </Pressable>
           </View>
         )}
@@ -140,14 +144,20 @@ function MobileBottomBar() {
             key={item.id}
             {...item}
             isActive={activeScreen === item.id}
-            onPress={() => {setDeferred(false); setScreen(item.id);}}
+            onPress={() => {
+              setDeferred(false);
+              setScreen(item.id);
+            }}
           />
         ) : (
           <ImportButton
             key={item.id}
             {...item}
             isActive={activeScreen === item.id}
-            onPress={() => {setDeferred(true); setScreen(item.id);}}
+            onPress={() => {
+              setDeferred(true);
+              setScreen(item.id);
+            }}
           />
         ),
       )}

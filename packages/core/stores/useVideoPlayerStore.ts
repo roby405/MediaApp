@@ -3,8 +3,6 @@ import { Registry } from "../interfaces/Registry";
 
 // const controlsTimer = new Timer();
 
-const video = Registry.video;
-
 interface VideoPlayerState {
   volume: number;
   playbackSpeed: number;

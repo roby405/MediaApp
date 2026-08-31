@@ -1,13 +1,12 @@
 import { Registry } from "@media-app/core/interfaces/Registry";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { initDB } from "src/db";
 import { saveFile, getFile, getFileContent, deleteFile, updateFile, renameFile, getFilesByCategory } from "src/db/operations";
 
 export function useDB() {
+  const [isReady, setReady] = useState(false);
   useEffect(() => {
-    const setup = async () => {
-      initDB();
-    }
+    initDB();
 
     Registry.registerDB({
       getFile,
@@ -22,5 +21,9 @@ export function useDB() {
       },
       getFilesByCategory
     })
-  }, [])
+
+    setReady(true);
+  }, []);
+
+  return isReady;
 }

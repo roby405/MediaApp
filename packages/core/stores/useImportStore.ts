@@ -1,11 +1,8 @@
 import { create } from "zustand";
 import type { MediaType } from "../types/global";
-import { BookMediaFile, MediaFile } from "src/db/schema";
-import { AudioMediaFile, ImageMediaFile, Metadata, VideoMediaFile } from "../types/db";
+import { AudioMediaFile, BookMediaFile, ImageMediaFile, MediaFile, Metadata, VideoMediaFile } from "../types/db";
 import { Registry } from "../interfaces/Registry";
 
-
-const imp = Registry.import;
 interface ImportProgress {
   current: number;
   total: number;
@@ -92,6 +89,8 @@ async function createMediaFileObject(file: File): Promise<MediaFile> {
     last_opened_at: 0,
     is_favourite: 0,
   };
+
+  const imp = Registry.import;
 
   switch (extension)    {
   case "epub": {
@@ -187,6 +186,7 @@ async function createMediaFileObject(file: File): Promise<MediaFile> {
 async function getCover(file: File): Promise<Blob | null> {
   const extension = file.name.split(".").pop()?.toLowerCase() || "";
   let cover = null;
+  const imp = Registry.import;
   switch (extension) {
     case "epub": {
       cover = await imp.extractEpubCover(file);
@@ -246,6 +246,7 @@ async function getCover(file: File): Promise<Blob | null> {
 
 async function getMetadata(file: File): Promise<Metadata> {
   const extension = file.name.split(".").pop()?.toLowerCase() || "";
+  const imp = Registry.import;
   switch (extension) {
     case "epub": {
       return await imp.extractEpubMetadata(file);

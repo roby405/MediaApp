@@ -77,11 +77,6 @@ export function useVideoEngine() {
   }, [setPlaying, goToNext, player]);
 
   useEffect(() => {
-    if (!player) {
-      setVideoRef(null);
-      return;
-    }
-
     Registry.registerVideo({
       play: player.play,
       pause: player.pause,
@@ -90,6 +85,11 @@ export function useVideoEngine() {
       },
       getCurrentTime: () => player.currentTime,
     });
+    if (!player) {
+      setVideoRef(null);
+      return;
+    }
+
     setVideoRef(player);
 
     return () => setVideoRef(null);

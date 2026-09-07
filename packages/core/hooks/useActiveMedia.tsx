@@ -1,6 +1,6 @@
-import type { AudioMediaFile, BookMediaFile, ImageMediaFile, MediaFile, VideoMediaFile } from "../../../apps/web/src/db/schema";
 import { useMediaStore } from "../stores/useMediaStore";
 import { useNavStore } from "../stores/useNavStore";
+import { AudioMediaFile, BookMediaFile, ImageMediaFile, MediaFile, VideoMediaFile } from "../types/db";
 import type { MediaType } from "../types/global";
 
 

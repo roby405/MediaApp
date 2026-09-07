@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { MediaType } from "../types/global";
+import type { MediaType, PlatformFile } from "../types/global";
 import { AudioMediaFile, BookMediaFile, ImageMediaFile, MediaFile, Metadata, VideoMediaFile } from "../types/db";
 import { Registry } from "../interfaces/Registry";
 
@@ -14,7 +14,7 @@ interface ImportState {
   isImporting: boolean;
   importProgress: ImportProgress | null;
   startImporting: (
-    files: File[],
+    files: PlatformFile[],
     importType: "files" | "folder",
   ) => Promise<void>;
 }
@@ -26,8 +26,8 @@ const EXTENSIONS = {
   book: new Set(["pdf", "epub", "mobi", "azw3", "cbz", "cbr", "djvu", "txt"]),
 } as const;
 
-export function determineFileType(file: File): MediaType {
-  const mime = file.type.toLowerCase();
+export function determineFileType(file: PlatformFile): MediaType {
+  const mime = file.mimeType.toLowerCase();
   const extension = file.name.split(".").pop()?.toLowerCase() || "";
 
   if (mime.startsWith("image/")) return "image";
@@ -46,21 +46,18 @@ export function determineFileType(file: File): MediaType {
 
 const CHUNK_SIZE = 64 * 1024;
 
-async function createFastHash(file: File): Promise<string> {
+async function createFastHash(file: PlatformFile): Promise<string> {
   let toHash: ArrayBuffer;
 
   if (file.size < CHUNK_SIZE * 2) {
-    toHash = await file.arrayBuffer();
+    toHash = await file.readBytes();
   } else {
-    const head = file.slice(0, CHUNK_SIZE);
-    const tail = file.slice(file.size - CHUNK_SIZE, file.size);
-
-    const headBuffer = await head.arrayBuffer();
-    const tailBuffer = await tail.arrayBuffer();
+    const head = await file.readSlice(0, CHUNK_SIZE);
+    const tail = await file.readSlice(file.size - CHUNK_SIZE, file.size);
 
     const combined = new Uint8Array(CHUNK_SIZE * 2);
-    combined.set(new Uint8Array(headBuffer), 0);
-    combined.set(new Uint8Array(tailBuffer), CHUNK_SIZE);
+    combined.set(new Uint8Array(head), 0);
+    combined.set(new Uint8Array(tail), CHUNK_SIZE);
 
     toHash = combined.buffer;
   }
@@ -75,14 +72,14 @@ async function createFastHash(file: File): Promise<string> {
   return hexaHash;
 }
 
-async function createMediaFileObject(file: File): Promise<MediaFile> {
+async function createMediaFileObject(file: PlatformFile): Promise<MediaFile> {
   const extension = file.name.split(".").pop()?.toLowerCase() || "";
 
   const base = {
     id: await createFastHash(file),
     name: file.name,
     extension: file.name.split(".").pop()?.toLowerCase() || "",
-    path: file.webkitRelativePath,
+    path: file.path,
     category: determineFileType(file),
     size: file.size,
     created_at: Date.now(),
@@ -183,7 +180,7 @@ async function createMediaFileObject(file: File): Promise<MediaFile> {
   }
 }
 
-async function getCover(file: File): Promise<Blob | null> {
+async function getCover(file: PlatformFile): Promise<string | null> {
   const extension = file.name.split(".").pop()?.toLowerCase() || "";
   let cover = null;
   const imp = Registry.import;
@@ -244,7 +241,7 @@ async function getCover(file: File): Promise<Blob | null> {
   return cover;
 }
 
-async function getMetadata(file: File): Promise<Metadata> {
+async function getMetadata(file: PlatformFile): Promise<Metadata> {
   const extension = file.name.split(".").pop()?.toLowerCase() || "";
   const imp = Registry.import;
   switch (extension) {

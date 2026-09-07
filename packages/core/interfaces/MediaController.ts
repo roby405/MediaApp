@@ -3,4 +3,6 @@ export interface MediaController {
   pause: () => Promise<void> | void;
   seek: (val: number) => Promise<void> | void;
   getCurrentTime: () => Promise<number> | number;
+  setPlaybackSpeed: (val: number) => Promise<void> | void;
+  setVolume: (val: number) => Promise<void> | void;
 }

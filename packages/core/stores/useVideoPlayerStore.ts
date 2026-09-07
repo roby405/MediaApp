@@ -1,34 +1,30 @@
 import { create } from "zustand";
-import { Registry } from "../interfaces/Registry";
+import { MediaController } from "../interfaces/MediaController";
+import { createStreamMediaSlice, StreamMediaState } from "./slices/createStreamMediaSlice";
 
 // const controlsTimer = new Timer();
 
-interface VideoPlayerState {
-  volume: number;
-  playbackSpeed: number;
-  isPlaying: boolean;
-  videoRef: any | null;
+interface VideoSpecificState {
+
   isExpanded: boolean;
   controlsVisible: boolean;
   activeMenu: VideoMenuType;
+
   setActiveMenu: (val: VideoMenuType) => void;
   setControlsVisible: (val: boolean) => void;
   setExpanded: (val: boolean) => void;
-  setVideoRef: (videoRef: any | null) => void;
-  setVolume: (val: number) => void;
   setPlaying: (val: boolean) => void;
-  setPlaybackSpeed: (val: number) => void;
   pingActivity: () => void;
   clearActivityTimer: () => void;
 }
 
 export type VideoMenuType = "queue" | "playback" | "sound" | null;
 
+
+type VideoPlayerState = StreamMediaState & VideoSpecificState;
+
 export const useVideoPlayerStore = create<VideoPlayerState>((set, get) => ({
-  volume: 80,
-  playbackSpeed: 1,
-  isPlaying: true,
-  videoRef: null,
+  ...createStreamMediaSlice(set, get),
   isExpanded: false,
   controlsVisible: true,
   activeMenu: null,
@@ -42,17 +38,6 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set, get) => ({
     }
     set({ isExpanded: val });
   },
-  setVideoRef: (videoRef) => set({ videoRef }),
-  setVolume: (val) => set({ volume: val }),
-  setPlaying: (val) => set({ isPlaying: val }),
-  setPlaybackSpeed: (val) => set({ playbackSpeed: val }),
-  videoData: null,
-  // seek: (time: number) => {
-  //   const video = get().videoRef;
-  //   if (!video) return;
-  //   video.currentTime = time;
-  //   set({ currentTime: time });
-  // },
 
   pingActivity: () => {
     set({ controlsVisible: true });

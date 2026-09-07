@@ -3,25 +3,18 @@ import { db } from ".";
 import * as FileSystem from "expo-file-system";
 import { MediaFile } from "@media-app/core/types/db";
 import { MediaType } from "@media-app/core/types/global";
+import { MobileFile } from "src/types/MobileFile";
 
 export const MEDIA_DIR = `${FileSystem.documentDirectory}media/`;
 export const SETTINGS_DIR = `${FileSystem.documentDirectory}settings/`;
 export const COVER_DIR = `${FileSystem.documentDirectory}cover/`;
 
 export async function makeSureDirsExist() {
-  const dirInfo = await FileSystem.getInfoAsync(MEDIA_DIR);
-  if (!dirInfo.exists) {
-    await FileSystem.makeDirectoryAsync(MEDIA_DIR, { intermediates: true });
-  }
-
-  const dirInfo2 = await FileSystem.getInfoAsync(SETTINGS_DIR);
-  if (!dirInfo2.exists) {
-    await FileSystem.makeDirectoryAsync(SETTINGS_DIR, { intermediates: true });
-  }
-  const dirInfo3 = await FileSystem.getInfoAsync(COVER_DIR);
-  if (!dirInfo3.exists) {
-    await FileSystem.makeDirectoryAsync(COVER_DIR, { intermediates: true });
-  }
+  await Promise.all([
+    FileSystem.makeDirectoryAsync(MEDIA_DIR, { intermediates: true }),
+    FileSystem.makeDirectoryAsync(SETTINGS_DIR, { intermediates: true }),
+    FileSystem.makeDirectoryAsync(COVER_DIR, { intermediates: true }),
+  ]);
 }
 
 function parseMedia(row: any): MediaFile {
@@ -94,7 +87,7 @@ export async function updateFile(file: MediaFile) {
 
 // CHANGED: Made async to match Web
 export async function getFile(id: string): Promise<MediaFile | null> {
-  const row = db.getFirstAsync(`SELECT * FROM files WHERE id = ?`, id);
+  const row = await db.getFirstAsync(`SELECT * FROM files WHERE id = ?`, id);
   return row ? parseMedia(row) : null;
 }
 
@@ -103,12 +96,12 @@ export function getFileSync(id: string): MediaFile | null {
   return row ? parseMedia(row) : null;
 }
 
-export async function getFileContent(id: string) {
-  const uri = getMediaUrl(id);
-  if (!uri) return null;
+export async function getFileContent(id: string): Promise<Uint8Array | null> {
+  const file = await getFile(id);
+  if (!file?.path) return null;
 
-  const res = await fetch(uri);
-  return await res.arrayBuffer();
+  const mobileFile = new MobileFile(file.path, file.name);
+  return mobileFile.readBytes();
 }
 
 export async function renameFile(id: string, newName: string) {
@@ -125,16 +118,23 @@ export async function getAllFiles(): Promise<MediaFile[]> {
 export async function getFilesByCategory<T extends MediaType>(
   category: T,
 ): Promise<Extract<MediaFile, { category: T }>[]> {
-  const rows = db.getAllSync('SELECT * FROM files WHERE category = ?', category);
+  const rows = db.getAllSync(
+    "SELECT * FROM files WHERE category = ?",
+    category,
+  );
   return rows.map(parseMedia) as Extract<MediaFile, { category: T }>[];
 }
 
+// TODO check what was stored in cover, hash or path
 export async function deleteFile(id: string) {
   const file = await getFile(id);
 
   if (file && file.path) {
     try {
       await FileSystem.deleteAsync(file.path, { idempotent: true });
+      if (file?.cover) {
+        await FileSystem.deleteAsync(`${COVER_DIR}${file.cover}.webp`, { idempotent: true });
+      }
     } catch (err) {
       console.error(`Couldn't delete file: ${err}`);
     }

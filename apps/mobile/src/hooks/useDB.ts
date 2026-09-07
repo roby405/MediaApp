@@ -15,9 +15,7 @@ export function useDB() {
       updateFile,
       renameFile,
       saveFile: async (file, source) => {
-        if (source.kind === "uri")
-          // TODO no cover url
-          await saveFile(file, source.value);
+        await saveFile(file, source.path);
       },
       getFilesByCategory
     })

@@ -202,6 +202,12 @@ importers:
       idb:
         specifier: ^8.0.3
         version: 8.0.3
+      music-metadata:
+        specifier: ^11.15.0
+        version: 11.15.0(supports-color@8.1.1)
+      strtok3:
+        specifier: ^10.3.5
+        version: 10.3.5
       zustand:
         specifier: ^5.0.14
         version: 5.0.15(@types/react@19.2.18)(react@19.2.8)

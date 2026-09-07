@@ -1,6 +1,5 @@
 import { create } from "zustand";
 
-// import { getFilesByCategory, updateFile } from "../../../apps/web/src/db/operations";
 import type { MediaType } from "../types/global";
 import { AudioMediaFile, BookMediaFile, ImageMediaFile, MediaFile, VideoMediaFile } from "../types/db";
 import { buildIndex } from "../utils/buildIndex";

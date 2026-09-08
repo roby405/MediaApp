@@ -8,7 +8,7 @@ const monorepoRoot = path.resolve(projectRoot, "../..");
 const config = getDefaultConfig(projectRoot);
 
 // 1. Watch all files in monorepo
-config.watchFolders = [monorepoRoot];
+config.watchFolders = [...config.watchFolders, monorepoRoot];
 
 // 2. Tell Metro where node_modules live
 config.resolver.nodeModulesPaths = [

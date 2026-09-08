@@ -4,7 +4,6 @@ import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore"
 import { useNavStore } from "@media-app/core/stores/useNavStore";
 import { useActiveMedia } from "@media-app/core/hooks/useActiveMedia";
 import { getMediaUrl } from "src/utils/getMediaUrl";
-import { Registry } from "@media-app/core/interfaces/Registry";
 
 export function useVideoEngine() {
   const isPlaying = useVideoPlayerStore((state) => state.isPlaying);
@@ -12,8 +11,9 @@ export function useVideoEngine() {
   const playbackSpeed = useVideoPlayerStore((state) => state.playbackSpeed);
   const volume = useVideoPlayerStore((state) => state.volume);
   const setExpanded = useVideoPlayerStore((state) => state.setExpanded);
+  const attachAdapter = useVideoPlayerStore((state) => state.attachAdapter);
+  const setplayerInstance = useVideoPlayerStore((state) => state.setplayerInstance);
 
-  const setVideoRef = useVideoPlayerStore((state) => state.setVideoRef);
   const goToNext = useNavStore((state) => state.goToNextMedia);
   const goToPrev = useNavStore((state) => state.goToPreviousMedia);
 
@@ -29,32 +29,16 @@ export function useVideoEngine() {
   });
 
   useEffect(() => {
-    if (!url || !player) return;
-    player.replace(url);
-    if (isPlaying) player.play();
-  }, [player, url]);
-
-  useEffect(() => {
     if (!player) return;
-
-    player.volume = Math.max(0, Math.min(volume, 100) / 100);
-  }, [volume, player]);
-
-  useEffect(() => {
-    if (!player) return;
-
-    player.playbackRate = playbackSpeed;
-  }, [playbackSpeed]);
-
-  useEffect(() => {
-    if (!player) return;
-
-    if (isPlaying && !player.playing) {
-      player.play();
-    } else if (!isPlaying && player.playing) {
+    if (url) {
+      player.replace(url);
+      if (isPlaying) player.play();
+    } else {
+      player.replace(null);
       player.pause();
+      setPlaying(false);
     }
-  }, [isPlaying, player, file?.id]);
+  }, [player, url]);
 
   useEffect(() => {
     if (!player) return;
@@ -77,21 +61,26 @@ export function useVideoEngine() {
   }, [setPlaying, goToNext, player]);
 
   useEffect(() => {
-    Registry.registerVideo({
-      play: player.play,
-      pause: player.pause,
+    if (!player) return;
+    attachAdapter({
+      play: () => player.play(),
+      pause: () => player.pause(),
       seek: (val: number) => {
         player.currentTime = val;
       },
       getCurrentTime: () => player.currentTime,
+      setVolume: (val: number) => {
+        player.volume = Math.max(0, Math.min(val, 100) / 100);
+      },
+      setPlaybackSpeed: (val: number) => {
+        player.playbackRate = val;
+      },
     });
-    if (!player) {
-      setVideoRef(null);
-      return;
-    }
+    setplayerInstance(player);
 
-    setVideoRef(player);
-
-    return () => setVideoRef(null);
-  }, [player, setVideoRef]);
+    return () => {
+      attachAdapter(null);
+      setplayerInstance(null);
+    };
+  }, [player, attachAdapter, setplayerInstance]);
 }

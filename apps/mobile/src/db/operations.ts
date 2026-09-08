@@ -1,4 +1,3 @@
-import { getMediaUrl } from "src/utils/getMediaUrl";
 import { db } from ".";
 import * as FileSystem from "expo-file-system";
 import { MediaFile } from "@media-app/core/types/db";

@@ -11,7 +11,7 @@ export interface StreamMediaState {
   getCurrentTime: () => number | Promise<number>;
   setVolume: (val: number) => void;
   setPlaybackSpeed: (val: number) => void;
-  attachAdapter: (adapter: MediaController) => void;
+  attachAdapter: (adapter: MediaController | null) => void;
   setPlaying: (val: boolean) => void;
 }
 
@@ -23,7 +23,7 @@ export const createStreamMediaSlice = (
   playbackSpeed: 1,
   isPlaying: false,
   adapter: null,
-  attachAdapter: (val: MediaController) => set({adapter: val}),
+  attachAdapter: (val: MediaController | null) => set({adapter: val}),
   play: () => get().adapter?.play(),
   pause: () => get().adapter?.pause(),
   seek: (val: number) => get().adapter?.seek(val),

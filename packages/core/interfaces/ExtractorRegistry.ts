@@ -1,9 +1,14 @@
+import { AudioExtractor } from "../extractors/AudioExtractor";
+import { CbzExtractor } from "../extractors/CbzExtractor";
 import { DefaultExtractor } from "../extractors/DefaultExtractor";
+import { EpubExtractor } from "../extractors/EpubExtractor";
 import { Extraction, MediaExtractor } from "../extractors/extractor";
+import { ImageExtractor } from "../extractors/ImageExtractor";
 import { PlatformFile } from "../types/global";
 
 class ExtractorRegistry {
-  private extractors: MediaExtractor[] = [];
+  // global extractors
+  private extractors: MediaExtractor[] = [new AudioExtractor(), new ImageExtractor(), new CbzExtractor(), new EpubExtractor()];
   private defaultExtractor = new DefaultExtractor();
 
   registerExtractor(extractor: MediaExtractor) {

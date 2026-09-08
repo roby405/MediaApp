@@ -2,7 +2,7 @@ import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore"
 import { useEffect, useState } from "react";
 
 export function useVideoProgress() {
-  const player = useVideoPlayerStore((state) => state.videoRef);
+  const player = useVideoPlayerStore((state) => state.playerInstance);
   const [currentTime, setCurrentTime] = useState<number>(player?.currentTime ?? 0);
 
   useEffect(() => {
@@ -13,9 +13,11 @@ export function useVideoProgress() {
 
     setCurrentTime(player.currentTime);
 
-    player.addListener("timeUpdate", ({ currentTime: time }: { currentTime: number }) => {
+    const listener = player.addListener("timeUpdate", ({ currentTime: time }: { currentTime: number }) => {
       setCurrentTime(time);
     });
-  }, [player, currentTime])
+
+    return () => listener.remove();
+  }, [player])
   return currentTime;
 }

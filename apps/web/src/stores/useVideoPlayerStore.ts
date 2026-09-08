@@ -8,14 +8,14 @@ interface VideoPlayerState {
   volume: number;
   playbackSpeed: number;
   isPlaying: boolean;
-  videoRef: HTMLVideoElement | null;
+  playerInstance: HTMLVideoElement | null;
   isExpanded: boolean;
   controlsVisible: boolean;
   activeMenu: VideoMenuType;
   setActiveMenu: (val: VideoMenuType) => void;
   setControlsVisible: (val: boolean) => void;
   setExpanded: (val: boolean) => void;
-  setVideoRef: (videoRef: HTMLVideoElement | null) => void;
+  setplayerInstance: (playerInstance: HTMLVideoElement | null) => void;
   setVolume: (val: number) => void;
   togglePlaying: () => void;
   setPlaybackSpeed: (val: number) => void;
@@ -32,7 +32,7 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set, get) => ({
   volume: 80,
   playbackSpeed: 1,
   isPlaying: true,
-  videoRef: null,
+  playerInstance: null,
   isExpanded: false,
   controlsVisible: true,
   activeMenu: null,
@@ -46,14 +46,14 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set, get) => ({
     }
     set({ isExpanded: val });
   },
-  setVideoRef: (videoRef) => set({ videoRef }),
+  setplayerInstance: (playerInstance) => set({ playerInstance }),
   setVolume: (val) => set({ volume: val }),
   togglePlaying: () => set({ isPlaying: !get().isPlaying }),
   setPlaybackSpeed: (val) => set({ playbackSpeed: val }),
   videoData: null,
   setCurrentTime: (time) => set({ currentTime: time }),
   seek: (time: number) => {
-    const video = get().videoRef;
+    const video = get().playerInstance;
     if (!video) return;
     video.currentTime = time;
     set({ currentTime: time });

@@ -3,7 +3,7 @@ import { Slider } from "../../components/Slider";
 import { useVideoProgress } from "src/hooks/useVideoProgress";
 import { formatLength } from "@media-app/core/utils/formatLength";
 import { AppText } from "src/components/AppText";
-import { Registry } from "@media-app/core/interfaces/Registry";
+import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore";
 
 export function TimeViewer() {
   const currentTime = useVideoProgress();
@@ -15,6 +15,7 @@ export function TimeViewer() {
 export function VideoProgressBar() {
   const currentTime = useVideoProgress();
   const {file} = useActiveMedia("video");
+  const seek = useVideoPlayerStore((state) => state.seek)
 
   if (!file)
     return null;
@@ -28,7 +29,7 @@ export function VideoProgressBar() {
       value={currentTime}
       className="w-full"
       onChange={(e) => {
-        Registry.video.seek(e);
+        seek(e);
       }}
     />
   );

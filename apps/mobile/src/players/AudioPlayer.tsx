@@ -21,7 +21,6 @@ import { useAudioPlayerStore } from "@media-app/core/stores/useAudioPlayerStore"
 import { useNavStore } from "@media-app/core/stores/useNavStore";
 import { useMediaStore } from "@media-app/core/stores/useMediaStore";
 import { useActiveMedia } from "@media-app/core/hooks/useActiveMedia";
-import { Registry } from "@media-app/core/interfaces/Registry";
 import { AppText } from "src/components/AppText";
 
 export function MiniAudioControls() {
@@ -128,7 +127,7 @@ export function ExtendedAudioControls() {
 }
 
 export function AudioProgressBar() {
-  const seek = Registry.audio.seek;
+  const seek = useAudioPlayerStore((state) => state.seek);
   const { position } = useProgress();
 
   const {file} = useActiveMedia("audio");

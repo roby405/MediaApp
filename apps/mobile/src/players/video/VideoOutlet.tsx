@@ -3,7 +3,7 @@ import { VideoView } from "expo-video";
 import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore";
 
 export function VideoOutlet() {
-  const player = useVideoPlayerStore((state) => state.videoRef);
+  const player = useVideoPlayerStore((state) => state.playerInstance);
 
   if (!player) return <View className="bg-black w-full h-full" />;
 

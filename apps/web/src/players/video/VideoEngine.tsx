@@ -14,12 +14,12 @@ export function VideoEngine() {
   const setExpanded = useVideoPlayerStore((state) => state.setExpanded);
 
   const setCurrentTime = useVideoPlayerStore((state) => state.setCurrentTime);
-  const setVideoRef = useVideoPlayerStore((state) => state.setVideoRef);
+  const setplayerInstance = useVideoPlayerStore((state) => state.setplayerInstance);
   const goToNext = useNavStore((state) => state.goToNextMedia);
   const goToPrev = useNavStore((state) => state.goToPreviousMedia);
 
   const {file} = useActiveMedia();
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const playerInstance = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -66,21 +66,21 @@ export function VideoEngine() {
   }, [goToNext, goToPrev, togglePlaying, setExpanded]);
 
   useEffect(() => {
-    const video = videoRef.current;
+    const video = playerInstance.current;
     if (!video) return;
 
     video.volume = Math.max(0, Math.min(volume, 100) / 100);
   }, [volume]);
 
   useEffect(() => {
-    const video = videoRef.current;
+    const video = playerInstance.current;
     if (!video) return;
 
     video.playbackRate = playbackSpeed;
   }, [playbackSpeed])
 
   useEffect(() => {
-    const video = videoRef.current;
+    const video = playerInstance.current;
     if (!video) return;
 
     if (isPlaying) {
@@ -95,19 +95,19 @@ export function VideoEngine() {
   }, [isPlaying, file?.id]);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (video) setVideoRef(video);
+    const video = playerInstance.current;
+    if (video) setplayerInstance(video);
     return () => {
-      setVideoRef(null);
+      setplayerInstance(null);
     };
-  }, [setVideoRef, videoRef, file?.id]);
+  }, [setplayerInstance, playerInstance, file?.id]);
 
   if (!file) return null;
 
   return (
     <div className="hidden" id="video-engine">
       <video
-        ref={videoRef}
+        ref={playerInstance}
         className="w-full h-full [view-transition-name:video-engine]"
         autoPlay
         src={getMediaUrl(file.id)}

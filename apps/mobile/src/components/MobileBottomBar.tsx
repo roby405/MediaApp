@@ -10,9 +10,9 @@ import {
   Music,
   type LucideIcon,
 } from "lucide-react-native";
-import { useRef } from "react";
 import { Pressable, Text, View } from "react-native";
 import { AppText } from "./AppText";
+import { MobileFile } from "src/types/MobileFile";
 
 export interface NavItem {
   id: Screen;
@@ -65,8 +65,6 @@ function ImportButton({
 }: NavButtonProps) {
   const startImporting = useImportStore((state) => state.startImporting);
 
-  const filesInputRef = useRef<HTMLInputElement>(null);
-  const folderInputRef = useRef<HTMLInputElement>(null);
   const setDeferred = useNavStore((state) => state.setDeferred);
 
   const handleImportFiles = async () => {
@@ -74,23 +72,35 @@ function ImportButton({
       const res = await DocumentPicker.getDocumentAsync({
         type: "*/*",
         multiple: true,
-        copyToCacheDirectory: false
+        copyToCacheDirectory: false,
       });
 
       if (!res.canceled && res.assets.length > 0)
-        await startImporting(res.assets
+        await startImporting(
+          res.assets.map((file) => MobileFile.fromAsset(file)),
+          "files",
+        );
     } catch (error) {
       console.error("Couldn't import files", error);
     }
-  }
+  };
 
   const handleImportFolder = async () => {
     try {
-      
+      const res = await DocumentPicker.getDocumentAsync({
+        type: "*/*",
+        multiple: true,
+      });
+
+      if (!res.canceled && res.assets.length > 0)
+        await startImporting(
+          res.assets.map((file) => MobileFile.fromAsset(file)),
+          "folder",
+        );
     } catch (error) {
       console.error("Couldn't import folder", error);
     }
-  }
+  };
 
   return (
     <>
@@ -115,13 +125,13 @@ function ImportButton({
           <View className="absolute bottom-full mb-10 bg-secondary flex flex-col w-40 h-26 gap-2 rounded-2xl text-lg">
             <Pressable
               className="flex-1"
-              onPress={() => filesInputRef.current?.click()}
+              onPress={handleImportFiles}
             >
               <AppText>Import Files</AppText>
             </Pressable>
             <Pressable
               className="flex-1"
-              onPress={() => folderInputRef.current?.click()}
+              onPress={handleImportFolder}
             >
               <AppText>Import a Folder</AppText>
             </Pressable>

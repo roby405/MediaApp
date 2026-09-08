@@ -4,6 +4,8 @@ import { MediaMenuButton } from "../buttons/MediaMenuButton";
 import { Image, Pressable, View } from "react-native";
 import { MediaType } from "@media-app/core/types/global";
 import { MediaFile } from "@media-app/core/types/db";
+import { AppText } from "../AppText";
+import { getCoverUrl } from "src/utils/getMediaUrl";
 
 interface CardProps {
   file: MediaFile;
@@ -38,7 +40,7 @@ function Card({
       return;
     }
 
-    const url = "/db/cover/" + file.id;
+    const url = getCoverUrl(file.id);
     setImageUrl(url);
   }, [cover, file.id]);
   return (
@@ -57,7 +59,7 @@ function Card({
             </View>
           ) : (
             <View className="flex h-full w-full items-center justify-center text-muted-foreground pointer-events-none">
-              No Image
+              <AppText>No Image</AppText>
             </View>
           )}
 
@@ -67,8 +69,8 @@ function Card({
               <View className="absolute inset-0 bg-linear-to-b from-transparent via-black/20 to-black/70 pointer-events-none"></View>
 
               <View className="pointer-events-none absolute left-0 bottom-0 right-0 p-3">
-                <View className="truncate text-md drop-shadow-sm">{title}</View>
-                <View className="text-gray-400">{bottomRow}</View>
+                <AppText className="truncate text-md drop-shadow-sm">{title}</AppText>
+                <AppText className="text-gray-400">{bottomRow}</AppText>
               </View>
             </>
           ) : (
@@ -89,17 +91,17 @@ function Card({
               />
             ) : (
               <View className="flex h-full aspect-square shrink-0 border border-gray-600 rounded-md items-center justify-center p-1 text-center text-muted-foreground">
-                No Image
+                <AppText>No Image</AppText>
               </View>
             )}
             <View className="flex-1 min-w-0 pt-1 pl-1 pr-2 h-full flex flex-col">
               <View className="flex flex-row relative">
-                <View className="truncate text-lg flex-1">{title}</View>
+                <AppText className="truncate text-lg flex-1">{title}</AppText>
                 <MediaMenuButton file={file} type="line" />
               </View>
               <View className="flex-1 pb-2 pr-8 flex flex-row justify-between text-xs items-end">
-                <View className="truncate text-left">{extra}</View>
-                <View className="truncate text-right">{bottomRow}</View>
+                <AppText className="truncate text-left">{extra}</AppText>
+                <AppText className="truncate text-right">{bottomRow}</AppText>
               </View>
             </View>
           </View>

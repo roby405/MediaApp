@@ -9,6 +9,8 @@ interface VideoSpecificState {
   isExpanded: boolean;
   controlsVisible: boolean;
   activeMenu: VideoMenuType;
+  playerInstance: any | null;
+  setplayerInstance: (playerInstance: any | null) => void;
 
   setActiveMenu: (val: VideoMenuType) => void;
   setControlsVisible: (val: boolean) => void;
@@ -28,6 +30,8 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set, get) => ({
   isExpanded: false,
   controlsVisible: true,
   activeMenu: null,
+  playerInstance: null,
+  setplayerInstance: (val: any | null) => set({playerInstance: val}),
   setActiveMenu: (val: VideoMenuType) => set({ activeMenu: val }),
   setControlsVisible: (val: boolean) => set({ controlsVisible: val }),
   setExpanded: (val: boolean) => {

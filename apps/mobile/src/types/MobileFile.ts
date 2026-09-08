@@ -1,4 +1,5 @@
 import { PlatformFile } from "@media-app/core/types/global";
+import { DocumentPickerAsset } from "expo-document-picker";
 import { File } from "expo-file-system/next";
 
 export class MobileFile implements PlatformFile {
@@ -14,6 +15,10 @@ export class MobileFile implements PlatformFile {
     this.mimeType = mimeType;
   }
 
+  static fromAsset(asset: DocumentPickerAsset) {
+    return new MobileFile(asset.uri, asset.name, asset.mimeType ?? null);
+  }
+
   get size(): number {
     return this.file.size ?? 0;
   }
@@ -27,7 +32,7 @@ export class MobileFile implements PlatformFile {
       end = this.size;
     const length = end - start;
 
-    if (length) return new Uint8Array(0);
+    if (length <= 0) return new Uint8Array(0);
 
     const fd = this.file.open();
 

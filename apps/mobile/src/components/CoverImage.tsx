@@ -1,6 +1,5 @@
-import { Image } from "react-native";
+import { Image, View } from "react-native";
 import { getCoverUrl } from "../utils/getMediaUrl";
-import { View } from "lucide-react-native";
 import { MediaFile } from "@media-app/core/types/db";
 
 interface CoverImageProps {

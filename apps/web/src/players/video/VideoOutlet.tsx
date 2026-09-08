@@ -2,12 +2,12 @@ import { useLayoutEffect, useRef } from "react";
 import { useVideoPlayerStore } from "../../stores/useVideoPlayerStore";
 
 export function VideoOutlet() {
-  const videoRef = useVideoPlayerStore((state) => state.videoRef);
+  const playerInstance = useVideoPlayerStore((state) => state.playerInstance);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    if (videoRef && containerRef.current) {
-      containerRef.current.appendChild(videoRef);
+    if (playerInstance && containerRef.current) {
+      containerRef.current.appendChild(playerInstance);
     }
 
     return () => {
@@ -16,14 +16,14 @@ export function VideoOutlet() {
         console.error("Video engine doesn't exist")
         return;
       }
-      if (!videoRef) {
+      if (!playerInstance) {
         console.error("Video no longer exists for whatever reason");
         return;
       }
-      videoEngine.appendChild(videoRef);
+      videoEngine.appendChild(playerInstance);
     }
 
-  }, [videoRef])
+  }, [playerInstance])
 
   return (
     <div ref={containerRef} className="w-full h-full rounded-[inherit] overflow-hidden" />

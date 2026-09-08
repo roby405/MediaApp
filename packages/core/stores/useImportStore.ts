@@ -1,7 +1,10 @@
 import { create } from "zustand";
 import type { MediaType, PlatformFile } from "../types/global";
-import { AudioMediaFile, BookMediaFile, ImageMediaFile, MediaFile, Metadata, VideoMediaFile } from "../types/db";
+import { MediaFile } from "../types/db";
 import { Registry } from "../interfaces/Registry";
+import { Extractor } from "../interfaces/ExtractorRegistry";
+import { sha256 } from "@noble/hashes/sha2";
+import { bytesToHex } from "@noble/hashes/utils";
 
 interface ImportProgress {
   current: number;
@@ -27,7 +30,7 @@ const EXTENSIONS = {
 } as const;
 
 export function determineFileType(file: PlatformFile): MediaType {
-  const mime = file.mimeType.toLowerCase();
+  const mime = file.mimeType?.toLowerCase() ?? "";
   const extension = file.name.split(".").pop()?.toLowerCase() || "";
 
   if (mime.startsWith("image/")) return "image";
@@ -47,7 +50,7 @@ export function determineFileType(file: PlatformFile): MediaType {
 const CHUNK_SIZE = 64 * 1024;
 
 async function createFastHash(file: PlatformFile): Promise<string> {
-  let toHash: ArrayBuffer;
+  let toHash: Uint8Array;
 
   if (file.size < CHUNK_SIZE * 2) {
     toHash = await file.readBytes();
@@ -59,22 +62,13 @@ async function createFastHash(file: PlatformFile): Promise<string> {
     combined.set(new Uint8Array(head), 0);
     combined.set(new Uint8Array(tail), CHUNK_SIZE);
 
-    toHash = combined.buffer;
+    toHash = combined;
   }
 
-  const hashBuffer = await crypto.subtle.digest("SHA-256", toHash);
-
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hexaHash = hashArray
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
-
-  return hexaHash;
+  return bytesToHex(sha256(toHash));
 }
 
 async function createMediaFileObject(file: PlatformFile): Promise<MediaFile> {
-  const extension = file.name.split(".").pop()?.toLowerCase() || "";
-
   const base = {
     id: await createFastHash(file),
     name: file.name,
@@ -87,210 +81,17 @@ async function createMediaFileObject(file: PlatformFile): Promise<MediaFile> {
     is_favourite: 0,
   };
 
-  const imp = Registry.import;
+  const extracted = await Extractor.extract(file);
 
-  switch (extension)    {
-  case "epub": {
-      const res: BookMediaFile = {
-        ...base,
-        category: "book",
-        cover: await imp.extractEpubCover(file),
-        metadata: await imp.extractEpubMetadata(file),
-      }
-      return res;
-    }
-
-    case "pdf": {
-      const res: BookMediaFile = {
-        ...base,
-        category: "book",
-        cover: await imp.extractPdfCover(file),
-        metadata: await imp.extractPdfMetadata(file),
-      }
-      return res;
-    }
-
-    case "cbz": {
-      const res: BookMediaFile = {
-        ...base,
-        category: "book",
-        cover: await imp.extractCbzCover(file),
-        metadata: await imp.extractCbzMetadata(file),
-      }
-      return res;
-    }
-
-    case "jpg":
-    case "jpeg":
-    case "png":
-    case "webp":
-    case "gif":
-    case "avif":
-    case "bmp":
-    case "svg": {
-      const res: ImageMediaFile = {
-        ...base,
-        category: "image",
-        cover: await imp.extractImageCover(file),
-        metadata: await imp.extractImageMetadata(file),
-      }
-      return res;
-    }
-
-    case "mp4":
-    case "webm":
-    case "mov":
-    case "mkv":
-    case "m4v":
-    case "wmv":
-    case "avi": {
-      const res: VideoMediaFile = {
-        ...base,
-        category: "video",
-        cover: await imp.extractVideoCover(file),
-        metadata: await imp.extractVideoMetadata(file),
-      }
-      return res;
-    }
-
-    case "mp3":
-    case "wav":
-    case "ogg":
-    case "flac":
-    case "aac":
-    case "m4a":
-    case "opus":
-    case "wma": {
-      const res: AudioMediaFile = {
-        ...base,
-        category: "audio",
-        cover: await imp.extractAudioCover(file),
-        metadata: await imp.extractAudioMetadata(file),
-      }
-      return res;
-    }
-
-    default:
-      return {
-        ...base,
-        category: "book",
-        metadata: {},
-        cover: null,
-      }
+  // TODO compress cover and save it
+  const meta = {
+    ...extracted,
+    cover: ""
   }
-}
 
-async function getCover(file: PlatformFile): Promise<string | null> {
-  const extension = file.name.split(".").pop()?.toLowerCase() || "";
-  let cover = null;
-  const imp = Registry.import;
-  switch (extension) {
-    case "epub": {
-      cover = await imp.extractEpubCover(file);
-      break;
-    }
-
-    case "pdf": {
-      cover = await imp.extractPdfCover(file);
-      break;
-    }
-
-    case "cbz": {
-      cover = await imp.extractCbzCover(file);
-      break;
-    }
-
-    case "jpg":
-    case "jpeg":
-    case "png":
-    case "webp":
-    case "gif":
-    case "avif":
-    case "bmp":
-    case "svg": {
-      cover = await imp.extractImageCover(file);
-      break;
-    }
-
-    case "mp4":
-    case "webm":
-    case "mov":
-    case "mkv":
-    case "m4v":
-    case "wmv":
-    case "avi": {
-      cover = await imp.extractVideoCover(file);
-      break;
-    }
-
-    case "mp3":
-    case "wav":
-    case "ogg":
-    case "flac":
-    case "aac":
-    case "m4a":
-    case "opus":
-    case "wma": {
-      cover = await imp.extractAudioCover(file);
-      break;
-    }
-
-    default:
-      break;
-  }
-  return cover;
-}
-
-async function getMetadata(file: PlatformFile): Promise<Metadata> {
-  const extension = file.name.split(".").pop()?.toLowerCase() || "";
-  const imp = Registry.import;
-  switch (extension) {
-    case "epub": {
-      return await imp.extractEpubMetadata(file);
-    }
-
-    case "pdf": {
-      return await imp.extractPdfMetadata(file);
-    }
-
-    case "cbz": {
-      return await imp.extractCbzMetadata(file);
-    }
-
-    case "jpg":
-    case "jpeg":
-    case "png":
-    case "webp":
-    case "gif":
-    case "avif":
-    case "bmp":
-    case "svg": {
-      return await imp.extractImageMetadata(file);
-    }
-
-    case "mp4":
-    case "webm":
-    case "mov":
-    case "mkv":
-    case "m4v":
-    case "wmv":
-    case "avi": {
-      return await imp.extractVideoMetadata(file);
-    }
-
-    case "mp3":
-    case "wav":
-    case "ogg":
-    case "flac":
-    case "aac":
-    case "m4a":
-    case "opus":
-    case "wma": {
-      return await imp.extractAudioMetadata(file);
-    }
-
-    default:
-      return {};
+  return {
+    ...base,
+    ...meta
   }
 }
 

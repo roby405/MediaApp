@@ -31,17 +31,17 @@ export function ExpandedVideoControls() {
   const isPlaying = useVideoPlayerStore((state) => state.isPlaying);
   const goToPrev = useNavStore((state) => state.goToPreviousMedia);
   const goToNext = useNavStore((state) => state.goToNextMedia);
-  const setPlaying = useVideoPlayerStore((state) => state.setPlaying);
+  const pause = useVideoPlayerStore((state) => state.pause);
+  const play = useVideoPlayerStore((state) => state.play);
   const volume = useVideoPlayerStore((state) => state.volume);
   const toggleFavourite = useMediaStore((state) => state.toggleFavourite);
-  const {file} = useActiveMedia();
+  const { file } = useActiveMedia();
   const setExpanded = useVideoPlayerStore((state) => state.setExpanded);
   const activeMenu = useVideoPlayerStore((state) => state.activeMenu);
   const setActiveMenu = useVideoPlayerStore((state) => state.setActiveMenu);
   const isShuffle = useNavStore((state) => state.isShuffle);
   const toggleShuffle = useNavStore((state) => state.toggleShuffle);
 
-  
   if (!file || file.category !== "video") return null;
   const isFavourite = file.is_favourite;
 
@@ -50,7 +50,11 @@ export function ExpandedVideoControls() {
       {/* top row video settings buttons*/}
       <View className="flex flex-row pointer-events-auto justify-between items-start">
         <View className="flex flex-row justify-center gap-1 shrink-0">
-          <IconButton onPress={toggleShuffle} Icon={ShuffleIcon} iconProps={{strokeWidth: isShuffle ? 2 : 1.4}} />
+          <IconButton
+            onPress={toggleShuffle}
+            Icon={ShuffleIcon}
+            iconProps={{ strokeWidth: isShuffle ? 2 : 1.4 }}
+          />
           <IconButton
             onPress={() => {
               toggleFavourite(file.category, file.id);
@@ -97,7 +101,7 @@ export function ExpandedVideoControls() {
           }}
         />
         <IconButton
-          onPress={() => setPlaying(!isPlaying)}
+          onPress={() => isPlaying ? pause() : play()}
           Icon={isPlaying ? PauseIcon : PlayIcon}
           className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-gray-100"
           iconProps={{

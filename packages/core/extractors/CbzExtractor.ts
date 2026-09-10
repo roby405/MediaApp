@@ -1,7 +1,6 @@
 import { PlatformFile } from "../types/global";
-import { PlatformFileReader } from "../utils/PlatformFileReader";
+import { PlatformFileReader, unzip } from "../utils/PlatformFileReader";
 import { Extraction, MediaExtractor } from "./extractor";
-import { unzip } from "unzipit";
 import { XMLParser } from "fast-xml-parser";
 
 const parser = new XMLParser({

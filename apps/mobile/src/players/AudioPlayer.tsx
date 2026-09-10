@@ -68,7 +68,7 @@ export function ExtendedAudioControls() {
   const isFavourite = file.is_favourite;
 
   return (
-    <View className="flex flex-row pointer-events-auto justify-between">
+    <View className="flex flex-row pointer-events-auto justify-between h-20">
       <View className="relative">
         <IconButton
           onPress={() => setActiveMenu("sound")}
@@ -159,7 +159,7 @@ export function MiniAudioPlayer() {
           setExtended(true);
         }}
       >
-        <CoverImage file={file} className="w-24 h-24" />
+        <CoverImage file={file} className="w-20 h-20" />
         <View className="flex flex-col justify-center min-w-0 pr-2">
           <ScrollingText
             text={file.metadata.title || ""}

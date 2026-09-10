@@ -8,17 +8,20 @@ interface CoverImageProps {
 }
 
 export function CoverImage({ file, className = "" }: CoverImageProps) {
-  if (file.cover)
+  const coverUrl = file.cover ? getCoverUrl(file.id) : "";
+  if (coverUrl)
     return (
-      <Image
-        className={`aspect-square rounded-sm pointer-events-none shrink-0 ${className}`}
-        source={{uri: file.cover}}
-      />
+      <View className="overflow-hidden">
+        <Image
+          className={`aspect-square rounded-md object-cover pointer-events-none shrink-0 ${className}`}
+          source={{ uri: coverUrl }}
+        />
+      </View>
     );
   else
     return (
       <View
-        className={`aspect-square rounded-md border border-primary shrink-0 ${className}`}
+        className={`aspect-square rounded-md border border-primary bg-red shrink-0 ${className}`}
       />
     );
 }

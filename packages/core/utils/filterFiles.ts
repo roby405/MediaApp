@@ -1,4 +1,4 @@
-import type { MediaFile } from "../../../apps/web/src/db/schema";
+import { MediaFile } from "../types/db";
 import type { FileSize } from "../types/filter";
 
 export interface FilterParams {

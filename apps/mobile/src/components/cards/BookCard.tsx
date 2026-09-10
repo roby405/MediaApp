@@ -1,6 +1,7 @@
-import type { BookMediaFile } from "../../db/schema";
-import { formatSize } from "../../../../../packages/core/utils/formatSize";
+
+import { BookMediaFile } from "@media-app/core/types/db";
 import Card, { BasicCardProps } from "./Card";
+import { formatSize } from "@media-app/core/utils/formatSize";
 
 type BookCardProps = BasicCardProps & {
   file: BookMediaFile

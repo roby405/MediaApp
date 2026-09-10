@@ -1,7 +1,6 @@
-import { unzip } from "unzipit";
 import { PlatformFile } from "../types/global";
 import { Extraction, MediaExtractor } from "./extractor";
-import { PlatformFileReader } from "../utils/PlatformFileReader";
+import { PlatformFileReader, unzip } from "../utils/PlatformFileReader";
 import { XMLParser } from "fast-xml-parser";
 import { BookMetadata } from "../types/db";
 

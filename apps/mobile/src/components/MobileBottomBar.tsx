@@ -72,7 +72,6 @@ function ImportButton({
       const res = await DocumentPicker.getDocumentAsync({
         type: "*/*",
         multiple: true,
-        copyToCacheDirectory: false,
       });
 
       if (!res.canceled && res.assets.length > 0)

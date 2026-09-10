@@ -1,11 +1,12 @@
 import { useRef, type ReactNode } from "react";
+import { BlurView } from "expo-blur";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { useWindowDimensions, View } from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 
 interface FloatingComponentProps {
   children: ReactNode;
@@ -23,7 +24,7 @@ export function FloatingComponent({
   const xStart = useSharedValue(0);
   const yStart = useSharedValue(0);
 
-    const panGesture = Gesture.Pan()
+  const panGesture = Gesture.Pan()
     .onStart(() => {
       xStart.value = xTranslate.value;
       yStart.value = yTranslate.value;
@@ -58,7 +59,12 @@ export function FloatingComponent({
           style={animatedStyle}
           className={`w-[90%] max-w-lg max-h-[90%] p-2 rounded-xl rounded-tr-3xl bg-white/20 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden ${className}`}
         >
-          {children}
+          <BlurView
+            intensity={50}
+            tint="dark"
+            style={StyleSheet.absoluteFill}
+          />
+          <View>{children}</View>
         </Animated.View>
       </GestureDetector>
     </View>

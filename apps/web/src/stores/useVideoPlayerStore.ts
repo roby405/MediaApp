@@ -15,7 +15,7 @@ interface VideoPlayerState {
   setActiveMenu: (val: VideoMenuType) => void;
   setControlsVisible: (val: boolean) => void;
   setExpanded: (val: boolean) => void;
-  setplayerInstance: (playerInstance: HTMLVideoElement | null) => void;
+  setPlayerInstance: (playerInstance: HTMLVideoElement | null) => void;
   setVolume: (val: number) => void;
   togglePlaying: () => void;
   setPlaybackSpeed: (val: number) => void;
@@ -46,7 +46,7 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set, get) => ({
     }
     set({ isExpanded: val });
   },
-  setplayerInstance: (playerInstance) => set({ playerInstance }),
+  setPlayerInstance: (playerInstance) => set({ playerInstance }),
   setVolume: (val) => set({ volume: val }),
   togglePlaying: () => set({ isPlaying: !get().isPlaying }),
   setPlaybackSpeed: (val) => set({ playbackSpeed: val }),

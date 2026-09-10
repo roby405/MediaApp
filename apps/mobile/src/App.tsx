@@ -2,20 +2,20 @@
 
 import PageContent from "./components/PageContent";
 import MobileBottomBar from "./components/MobileBottomBar";
-import { useNavStore } from "../../../packages/core/stores/useNavStore";
 import { isMediaScreen, SCREEN_MAP } from "./screens";
-import type { Screen } from "../../../packages/core/types/global";
 import { AudioPlayer } from "./players/AudioPlayer";
 import { FloatingComponent } from "./components/motion/FloatingComponent";
 import { FloatingResizableComponent } from "./components/motion/FloatingResizableComponent";
 import { ExpandedVideoPlayer, MiniVideoPlayer } from "./players/VideoPlayer";
-import { useVideoPlayerStore } from "../../../packages/core/stores/useVideoPlayerStore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { View } from "react-native";
 import { MediaScreen } from "./screens/MediaScreen";
 import { useAudioEngine } from "./hooks/useAudioEngine";
 import { useVideoEngine } from "./hooks/useVideoEngine";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useNavStore } from "@media-app/core/stores/useNavStore";
+import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore";
+import { Screen } from "@media-app/core/types/global";
 
 function App() {
   const activeScreen = useNavStore((state) => state.activeScreen);

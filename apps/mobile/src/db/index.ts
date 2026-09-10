@@ -15,7 +15,7 @@ export function initDB() {
       last_opened_at INTEGER NOT NULL,
       is_favourite INTEGER NOT NULL,
       category TEXT NOT NULL,
-      METADATA TEXT NOT NULL
+      metadata TEXT NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS by_category ON files (category);

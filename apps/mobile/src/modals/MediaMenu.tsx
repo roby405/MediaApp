@@ -4,9 +4,10 @@ import { useState } from "react";
 // import { deleteFile, renameFile } from "../db/operations";
 import Rename from "./Rename";
 import DeleteFile from "./prompts/DeleteFile";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { AppText } from "src/components/AppText";
 import { MediaFile } from "@media-app/core/types/db";
+import { deleteFile, renameFile } from "src/db/operations";
 
 interface MediaMenuProps extends BasicModalProps {
   file: MediaFile;
@@ -17,27 +18,27 @@ export default function MediaMenu({ isOpen, onClose, file }: MediaMenuProps) {
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
 
   const handleRename = (name: string) => {
-    // renameFile(file.id, `${name}.${file.extension}`).then(
-    //   () => {
-    //     console.log("succeeded");
-    //   },
-    //   () => {
-    //     console.log("failed");
-    //   },
-    // );
+    renameFile(file.id, `${name}.${file.extension}`).then(
+      () => {
+        console.log("succeeded");
+      },
+      () => {
+        console.log("failed");
+      },
+    );
     setRenameModalOpen(false);
     onClose();
   };
 
   const handleDelete = () => {
-    // deleteFile(file.id).then(
-    //   () => {
-    //     console.log("succeeded");
-    //   },
-    //   () => {
-    //     console.log("failed");
-    //   },
-    // );
+    deleteFile(file.id).then(
+      () => {
+        console.log("succeeded");
+      },
+      () => {
+        console.log("failed");
+      },
+    );
     setDeleteModalOpen(false);
     onClose();
   };
@@ -70,7 +71,7 @@ export default function MediaMenu({ isOpen, onClose, file }: MediaMenuProps) {
             onRename={handleRename}
           />
         )}
-        <View className="h-px bg-gray-400/50"> </View>
+        <View className="h-px bg-gray-400/50" />
         <Pressable
           className="flex flex-row gap-2 text-red-500 items-center justify-start"
           onPress={(e) => {

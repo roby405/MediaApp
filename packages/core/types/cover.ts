@@ -1,3 +1,4 @@
+import { ExtractedCover } from "../extractors/extractor";
 import { MediaType } from "./global";
 
 export interface CoverSpecs {
@@ -15,5 +16,5 @@ export const CATEGORY_COVER_SPECS: Record<MediaType, CoverSpecs> = {
 }
 
 export interface CoverCompressor {
-  compress(data: Uint8Array, mimeType: string): Promise<string>;
+  compress(extractedCover: ExtractedCover, type: CoverSpecs): Promise<string>;
 }

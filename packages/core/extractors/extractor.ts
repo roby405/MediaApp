@@ -1,7 +1,7 @@
 import { AudioMetadata, BookMetadata, ImageMetadata, VideoMetadata } from "../types/db";
 import { PlatformFile } from "../types/global";
 
-interface ExtractedCover {
+export interface ExtractedCover {
   data: Uint8Array;
   mimeType: string;
 }

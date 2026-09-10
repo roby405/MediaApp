@@ -11,10 +11,14 @@ export class PlatformFileTokenizer extends AbstractTokenizer {
     this.fileInfo = {
       size: file.size,
       mimeType: file.mimeType ?? undefined,
+      path: file.name
     }
   }
   public override supportsRandomAccess(): boolean {
     return true;
+  }
+  public setPosition(position: number): void {
+    this.position = position;
   }
   public override async readBuffer(buffer: Uint8Array, options?: IReadChunkOptions): Promise<number> {
     const length = options?.length ?? (buffer.byteLength);

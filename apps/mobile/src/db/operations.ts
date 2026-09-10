@@ -29,18 +29,13 @@ export async function saveFile(
   coverSource = "",
 ) {
   await makeSureDirsExist();
-  const coverDest = `${COVER_DIR}${file.id}.webp`;
+  const mediaDest = `${MEDIA_DIR}${file.id}.${file.extension}`
   await FileSystem.copyAsync({
     from: source,
-    to: file.path,
+    to: mediaDest,
   });
 
-  if (file.cover && coverSource) {
-    await FileSystem.copyAsync({
-      from: coverSource,
-      to: coverDest,
-    });
-  }
+  file.path = mediaDest;
 
   const dbFormat = db.prepareSync(`INSERT OR REPLACE INTO files 
     (id, name, extension, path, size, created_at, cover, last_opened_at, is_favourite, category, metadata) 
@@ -58,7 +53,7 @@ export async function saveFile(
     file.last_opened_at,
     file.is_favourite,
     file.category,
-    JSON.stringify(file.metadata),
+    JSON.stringify(file.metadata ?? {}),
   ]);
 }
 

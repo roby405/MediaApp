@@ -14,7 +14,7 @@ export function VideoEngine() {
   const setExpanded = useVideoPlayerStore((state) => state.setExpanded);
 
   const setCurrentTime = useVideoPlayerStore((state) => state.setCurrentTime);
-  const setplayerInstance = useVideoPlayerStore((state) => state.setplayerInstance);
+  const setPlayerInstance = useVideoPlayerStore((state) => state.setPlayerInstance);
   const goToNext = useNavStore((state) => state.goToNextMedia);
   const goToPrev = useNavStore((state) => state.goToPreviousMedia);
 
@@ -96,11 +96,11 @@ export function VideoEngine() {
 
   useEffect(() => {
     const video = playerInstance.current;
-    if (video) setplayerInstance(video);
+    if (video) setPlayerInstance(video);
     return () => {
-      setplayerInstance(null);
+      setPlayerInstance(null);
     };
-  }, [setplayerInstance, playerInstance, file?.id]);
+  }, [setPlayerInstance, playerInstance, file?.id]);
 
   if (!file) return null;
 

@@ -48,13 +48,13 @@ function Card({
       {viewMode === "grid" && (
         <Pressable
           onPress={onPress}
-          className="relative shadow-md group w-full aspect-square rounded-xl bg-secondary select-none"
+          className="relative shadow-md group flex-1 aspect-square rounded-xl bg-secondary select-none"
         >
           {imageUrl ? (
             <View className="w-full h-full overflow-hidden rounded-xl">
               <Image
                 source={{ uri: imageUrl }}
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 pointer-events-none"
+                className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105 pointer-events-none rounded-xl"
               />
             </View>
           ) : (
@@ -87,7 +87,7 @@ function Card({
             {imageUrl ? (
               <Image
                 source={{ uri: imageUrl }}
-                className="aspect-square object-cover rounded-md border border-gray-600"
+                className="aspect-square object-contain rounded-md border border-gray-600"
               />
             ) : (
               <View className="flex h-full aspect-square shrink-0 border border-gray-600 rounded-md items-center justify-center p-1 text-center text-muted-foreground">

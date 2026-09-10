@@ -1,5 +1,4 @@
-import { PlatformFileTokenizer } from "../utils/PlatformFileTokenizer";
-import { parseFromTokenizer } from "music-metadata";
+import { parseBuffer } from "music-metadata";
 import { Extraction, MediaExtractor } from "./extractor";
 import { PlatformFile } from "../types/global";
 
@@ -11,8 +10,8 @@ export class AudioExtractor implements MediaExtractor {
   }
 
   async extract(file: PlatformFile): Promise<Extraction> {
-    const tokenizer = new PlatformFileTokenizer(file);
-    const metadata = await parseFromTokenizer(tokenizer);
+    const buffer = await file.readBytes();
+    const metadata = await parseBuffer(buffer, { mimeType: file.mimeType ?? undefined, path: file.name });
     const { common, format } = metadata;
 
     return {
@@ -40,3 +39,4 @@ export class AudioExtractor implements MediaExtractor {
     };
   }
 }
+

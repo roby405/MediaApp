@@ -11,9 +11,37 @@ export const SCREEN_MAP: Record<Exclude<Screen, MediaType>, ComponentType> = {
     import: ImportScreen
 }
 
-export const GRID_LAYOUT_MAP: Record<MediaType, string> = {
-  "image": "grid-cols-3 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6",
-  "audio": "grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
-  "video": "grid-cols-1 gap-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3",
-  "book": "grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
+export function getResponsiveColumns(type: MediaType, width: number): number {
+  if (width >= 1024) {
+    switch (type) {
+      case "video": return 3;
+      case "audio": return 4;
+      case "book": return 4;
+      case "image": return 5;
+    }
+  }
+
+  if (width >= 768) {
+    switch (type) {
+      case "video": return 2;
+      case "audio": return 3;
+      case "book": return 3;
+      case "image": return 4;
+    }
+  }
+
+  if (width >= 600) {
+    switch (type) {
+      case "video": return 2;
+      case "audio": return 2;
+      case "book": return 3;
+      case "image": return 4;
+    }
+  }
+  switch (type) {
+    case "video": return 1;
+    case "audio": return 2;
+    case "book": return 2;
+    case "image": return 3;
+  }
 }

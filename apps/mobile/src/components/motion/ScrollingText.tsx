@@ -8,6 +8,7 @@ import Animated, {
   Easing,
   cancelAnimation,
 } from "react-native-reanimated";
+import { AppText } from "../AppText";
 interface ScrollingTextProps {
   text: string;
   className?: string;

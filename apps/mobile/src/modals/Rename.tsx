@@ -32,13 +32,14 @@ export default function Rename({
             className="rounded-lg flex-1 border-gray-400 border"
             onPress={() => onRename(name)}
           >
-            Confirm
+            <AppText>Confirm</AppText>
+            
           </Pressable>
           <Pressable
             className="rounded-lg flex-1 border-gray-400 border"
             onPress={onClose}
           >
-            Cancel
+            <AppText>Cancel</AppText>
           </Pressable>
         </View>
       </View>

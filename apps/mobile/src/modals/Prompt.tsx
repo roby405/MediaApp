@@ -28,10 +28,10 @@ export default function Prompt({
         </AppText>
         <View className="flex flex-row px-10 gap-8">
           <Pressable className="flex-1 items-center border-gray-400 border rounded-lg px-3 py-1" onPress={onConfirm}>
-            {confirmMessage}
+            <AppText>{confirmMessage}</AppText>
           </Pressable>
           <Pressable className="flex-1 items-center border-gray-400 border rounded-lg" onPress={onClose}>
-            {rejectMessage}
+            <AppText>{rejectMessage}</AppText>
           </Pressable>
         </View>
       </Pressable>

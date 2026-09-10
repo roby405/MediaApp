@@ -1,4 +1,4 @@
-import type { MediaFile } from "../../db/schema";
+import { MediaFile } from "@media-app/core/types/db";
 import type { PromptProps } from "../Prompt";
 import Prompt from "../Prompt";
 

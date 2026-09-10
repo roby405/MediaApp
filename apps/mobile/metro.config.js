@@ -14,14 +14,21 @@ config.watchFolders = [...config.watchFolders, monorepoRoot];
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, "node_modules"),
   path.resolve(monorepoRoot, "node_modules"),
+  path.resolve(monorepoRoot, "packages/core/node_modules"),
 ];
 
 
 
-// 3. Force EVERY import of 'react' across the entire monorepo to resolve to Mobile's React 18
+// 3. Enable package exports support
+config.resolver.unstable_enablePackageExports = true;
+
+// 4. Force EVERY import of 'react' across the entire monorepo to resolve to Mobile's React 18
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (moduleName === "music-metadata") {
     return context.resolveRequest(context, "music-metadata/lib/core.js", platform);
+  }
+  if (moduleName === "strtok3") {
+    return context.resolveRequest(context, "strtok3/lib/core.js", platform);
   }
   if (moduleName === "react") {
     return {

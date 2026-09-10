@@ -2,9 +2,9 @@
 import { MiniVideoControls } from "./video/MiniVideoControls";
 import { ExpandedVideoControls } from "./video/ExpandedVideoControls";
 import { VideoOutlet } from "./video/VideoOutlet";
-import { useNavStore } from "../../../../packages/core/stores/useNavStore";
 import { Pressable, View } from "react-native";
 import { useVideoPlayerStore } from "@media-app/core/stores/useVideoPlayerStore";
+import { useNavStore } from "@media-app/core/stores/useNavStore";
 export function MiniVideoPlayer() {
   const activeMedia = useNavStore((state) => state.activeMedia);
   const setExpanded = useVideoPlayerStore((state) => state.setExpanded);

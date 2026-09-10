@@ -12,7 +12,7 @@ export function useVideoEngine() {
   const volume = useVideoPlayerStore((state) => state.volume);
   const setExpanded = useVideoPlayerStore((state) => state.setExpanded);
   const attachAdapter = useVideoPlayerStore((state) => state.attachAdapter);
-  const setplayerInstance = useVideoPlayerStore((state) => state.setplayerInstance);
+  const setPlayerInstance = useVideoPlayerStore((state) => state.setPlayerInstance);
 
   const goToNext = useNavStore((state) => state.goToNextMedia);
   const goToPrev = useNavStore((state) => state.goToPreviousMedia);
@@ -76,11 +76,11 @@ export function useVideoEngine() {
         player.playbackRate = val;
       },
     });
-    setplayerInstance(player);
+    setPlayerInstance(player);
 
     return () => {
       attachAdapter(null);
-      setplayerInstance(null);
+      setPlayerInstance(null);
     };
-  }, [player, attachAdapter, setplayerInstance]);
+  }, [player, attachAdapter, setPlayerInstance]);
 }

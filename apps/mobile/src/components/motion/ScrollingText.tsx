@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import { useState, useEffect } from "react";
+import { View } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -50,7 +50,7 @@ export function ScrollingText({ text, className = "" }: ScrollingTextProps) {
       className={`overflow-hidden whitespace-nowrap w-full ${className}`}
       onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
     >
-      <Animated.View style={[{ flexDirection: "row" }, animatedStyle]}>
+      <Animated.View className="flex-row" style={animatedStyle}>
         {/* The Original Text */}
         <AppText
           className={shouldScroll ? "pr-8" : ""}

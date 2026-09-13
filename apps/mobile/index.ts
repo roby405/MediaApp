@@ -1,5 +1,9 @@
 import "./global.css";
 import { registerRootComponent } from "expo";
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from "react-native-reanimated";
 import App from "./src/App";
 import { initDB } from "src/db";
 import { Registry } from "@media-app/core/interfaces/Registry";
@@ -8,6 +12,13 @@ import TrackPlayer from "react-native-track-player";
 import { useMediaStore } from "@media-app/core/stores/useMediaStore";
 import { Cover } from "@media-app/core/interfaces/CoverRegistry";
 import { MobileCoverCompressor } from "src/utils/MobileCoverCompressor";
+import { Extractor } from "@media-app/core/interfaces/ExtractorRegistry";
+import { MobileVideoExtractor } from "src/extractors/MobileVideoExtractor";
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
+});
 
 initDB();
 
@@ -23,6 +34,7 @@ Registry.registerDB({
   getFilesByCategory,
 });
 
+Extractor.registerExtractor(new MobileVideoExtractor());
 Cover.registerCoverCompressor(new MobileCoverCompressor());
 
 useMediaStore.getState().loadAll();

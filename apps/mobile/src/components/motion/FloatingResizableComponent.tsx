@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -23,23 +23,30 @@ export function FloatingResizableComponent({
   const xStart = useSharedValue(0);
   const yStart = useSharedValue(0);
 
-    const panGesture = Gesture.Pan()
-    .onStart(() => {
-      xStart.value = xTranslate.value;
-      yStart.value = yTranslate.value;
-    })
-    .onUpdate((e) => {
-      xTranslate.value = xStart.value + e.translationX;
-      yTranslate.value = yStart.value + e.translationY;
-    })
-    .onEnd(() => {
-      const boundX = screenWidth * 0.4;
-      const boundY = screenHeight * 0.4;
-      if (Math.abs(xTranslate.value) > boundX)
-        xTranslate.value = withSpring(Math.sign(xTranslate.value) * boundX);
-      if (Math.abs(yTranslate.value) > boundY)
-        yTranslate.value = withSpring(Math.sign(yTranslate.value) * boundY);
-    });
+  const panGesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .onStart(() => {
+          "worklet";
+          xStart.value = xTranslate.value;
+          yStart.value = yTranslate.value;
+        })
+        .onUpdate((e) => {
+          "worklet";
+          xTranslate.value = xStart.value + e.translationX;
+          yTranslate.value = yStart.value + e.translationY;
+        })
+        .onEnd(() => {
+          "worklet";
+          const boundX = screenWidth * 0.4;
+          const boundY = screenHeight * 0.4;
+          if (Math.abs(xTranslate.value) > boundX)
+            xTranslate.value = withSpring(Math.sign(xTranslate.value) * boundX);
+          if (Math.abs(yTranslate.value) > boundY)
+            yTranslate.value = withSpring(Math.sign(yTranslate.value) * boundY);
+        }),
+    [screenWidth, screenHeight, xStart, yStart, xTranslate, yTranslate]
+  );
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [

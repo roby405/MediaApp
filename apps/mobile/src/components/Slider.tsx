@@ -79,6 +79,7 @@
 import React from "react";
 import NativeSlider from "@react-native-community/slider";
 import { View, DimensionValue } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 export interface SliderProps {
   value: number;
@@ -120,9 +121,10 @@ export function Slider({
 }: SliderProps) {
   const isV = orientation === "v";
   const dimensionLength = parseLength(length, isV);
-
-  // Default rotation for vertical: -90deg (bottom = 0, top = max)
   const rotation = isV ? (reverse ? "90deg" : "-90deg") : (reverse ? "180deg" : "0deg");
+
+  // Tells the gesture-handler arena "there's a native recognizer here"
+  const nativeGesture = Gesture.Native();
 
   return (
     <View
@@ -133,22 +135,23 @@ export function Slider({
           : { width: dimensionLength, height: 40 }
       }
     >
-      <NativeSlider
-        style={{
-          width: isV ? (typeof dimensionLength === "number" ? dimensionLength : 140) : "100%",
-          height: 40,
-          transform: [{ rotate: rotation }],
-        }}
-        value={value}
-        minimumValue={min}
-        maximumValue={max}
-        step={step}
-        onValueChange={onChange}
-        // Custom styling matching your dark theme
-        minimumTrackTintColor="#FFFFFF" // Filled track
-        maximumTrackTintColor="#4B5563" // Unfilled track
-        thumbTintColor="#FFFFFF"        // Circle thumb
-      />
+      <GestureDetector gesture={nativeGesture}>
+        <NativeSlider
+          style={{
+            width: isV ? (typeof dimensionLength === "number" ? dimensionLength : 140) : "100%",
+            height: 40,
+            transform: [{ rotate: rotation }],
+          }}
+          value={value}
+          minimumValue={min}
+          maximumValue={max}
+          step={step}
+          onValueChange={onChange}
+          minimumTrackTintColor="#FFFFFF"
+          maximumTrackTintColor="#4B5563"
+          thumbTintColor="#FFFFFF"
+        />
+      </GestureDetector>
     </View>
   );
 }

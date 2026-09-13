@@ -1,4 +1,3 @@
-
 import { MiniVideoControls } from "./video/MiniVideoControls";
 import { ExpandedVideoControls } from "./video/ExpandedVideoControls";
 import { VideoOutlet } from "./video/VideoOutlet";
@@ -10,13 +9,17 @@ export function MiniVideoPlayer() {
   const setExpanded = useVideoPlayerStore((state) => state.setExpanded);
   if (!activeMedia || activeMedia.category !== "video") return null;
   return (
-    <View className="select-none w-full flex flex-row gap-2 justify-center">
-      <View className="flex-1 aspect-video rounded-lg rounded-tr-3xl overflow-hidden">
+    <View
+      className="w-full flex flex-row gap-2 justify-center items-center"
+      style={{ height: 170 }}
+    >
+      <View
+        style={{ height: 170, marginBottom: 16 }}
+        className="aspect-video rounded-lg rounded-tr-3xl overflow-hidden"
+      >
         <VideoOutlet />
       </View>
-      <MiniVideoControls
-        startViewTransition={() => setExpanded(true)}
-      />
+      <MiniVideoControls startViewTransition={() => setExpanded(true)} />
     </View>
   );
 }
@@ -37,8 +40,7 @@ export function ExpandedVideoPlayer() {
     }
   };
 
-  if (!activeMedia)
-    return null;
+  if (!activeMedia) return null;
 
   return (
     <View
@@ -47,11 +49,7 @@ export function ExpandedVideoPlayer() {
     >
       <VideoOutlet />
 
-
-      <Pressable
-        className="absolute inset-0 z-10"
-        onPress={pingTimer}
-      />
+      <Pressable className="absolute inset-0 z-10" onPress={pingTimer} />
 
       {controlsVisible && <ExpandedVideoControls />}
     </View>

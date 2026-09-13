@@ -72,13 +72,15 @@ function ImportButton({
       const res = await DocumentPicker.getDocumentAsync({
         type: "*/*",
         multiple: true,
+        copyToCacheDirectory: false,
       });
 
-      if (!res.canceled && res.assets.length > 0)
-        await startImporting(
+      if (!res.canceled && res.assets.length > 0) {
+        const files = await Promise.all(
           res.assets.map((file) => MobileFile.fromAsset(file)),
-          "files",
         );
+        await startImporting(files, "files");
+      }
     } catch (error) {
       console.error("Couldn't import files", error);
     }
@@ -91,11 +93,12 @@ function ImportButton({
         multiple: true,
       });
 
-      if (!res.canceled && res.assets.length > 0)
-        await startImporting(
+      if (!res.canceled && res.assets.length > 0) {
+        const files = await Promise.all(
           res.assets.map((file) => MobileFile.fromAsset(file)),
-          "folder",
         );
+        await startImporting(files, "folder");
+      }
     } catch (error) {
       console.error("Couldn't import folder", error);
     }
@@ -122,16 +125,10 @@ function ImportButton({
         <AppText className="text-md">{label}</AppText>
         {isActive && (
           <View className="absolute bottom-full mb-10 bg-secondary flex flex-col w-40 h-26 gap-2 rounded-2xl text-lg">
-            <Pressable
-              className="flex-1"
-              onPress={handleImportFiles}
-            >
+            <Pressable className="flex-1" onPress={handleImportFiles}>
               <AppText>Import Files</AppText>
             </Pressable>
-            <Pressable
-              className="flex-1"
-              onPress={handleImportFolder}
-            >
+            <Pressable className="flex-1" onPress={handleImportFolder}>
               <AppText>Import a Folder</AppText>
             </Pressable>
           </View>

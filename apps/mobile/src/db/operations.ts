@@ -30,10 +30,11 @@ export async function saveFile(
 ) {
   await makeSureDirsExist();
   const mediaDest = `${MEDIA_DIR}${file.id}.${file.extension}`
-  await FileSystem.copyAsync({
-    from: source,
-    to: mediaDest,
-  });
+  if (source !== mediaDest)
+    await FileSystem.moveAsync({
+      from: source,
+      to: mediaDest,
+    });
 
   file.path = mediaDest;
 

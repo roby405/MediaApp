@@ -8,10 +8,10 @@ export function VideoOutlet() {
   if (!player) return <View className="bg-black w-full h-full" />;
 
   return (
-    <View className="w-full h-full rounded-[inherit] overflow-hidden">
+    <View className="w-full h-full overflow-hidden">
       <VideoView
         player={player}
-        className="w-full h-full"
+        style={{width: "100%", height: "100%"}}
         nativeControls={false}
         contentFit="contain"
         allowsFullscreen
